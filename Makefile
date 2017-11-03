@@ -1,13 +1,18 @@
 
+CONFIGURATION = Debug
+
 GEN_SOURCES = libsoundio-sharp/soundio.cs
+MANAGED_LIB = libsoundio-sharp/bin/$(CONFIGURATION)/libsoundio-sharp.dll
+SHARED_LIB = external/libsoundio/libsoundio.so
 PINVOKEGEN = external/nclang/samples/PInvokeGenerator/bin/Debug/PInvokeGenerator.exe
 C_HEADERS = external/libsoundio/soundio/soundio.h
 
 RUNTIME = mono --debug
 
-all: libsoundio-sharp/bin/$(CONFIGURATION)/libsoundio-sharp.dll
 
-libsoundio-sharp/bin/$(CONFIGURATION)/libsoundio-sharp.dll: $(GEN_SOURCES)
+all: $(MANAGED_LIB)
+
+$(MANAGED_LIB): $(GEN_SOURCES) $(SHARED_LIB)
 	msbuild
 
 $(GEN_SOURCES): $(PINVOKEGEN) $(C_HEADERS)
@@ -15,4 +20,13 @@ $(GEN_SOURCES): $(PINVOKEGEN) $(C_HEADERS)
 
 $(PINVOKEGEN):
 	cd external/nclang && msbuild
+
+$(SHARED_LIB):
+	cd external/libsoundio && cmake . && make
+
+
+clean:
+	msbuild /t:Clean
+	cd external/nclang && msbuild /t:Clean
+	cd external/libsoundio && make clean
 
