@@ -3,10 +3,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{D6FB7880-23D7-44B7-827E-A471BA354D92}</ProjectGuid>
+    <ProjectGuid>{A9CB8FF4-E506-4C18-AFB0-73B9C0A46581}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>libsoundiosharp</RootNamespace>
-    <AssemblyName>libsoundio-sharp</AssemblyName>
+    <RootNamespace>libsoundiosharp.Tests</RootNamespace>
+    <AssemblyName>libsoundio-sharp.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -17,40 +17,30 @@
     <DefineConstants>DEBUG;</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <Optimize>true</Optimize>
     <OutputPath>bin\Release</OutputPath>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <ConsolePause>false</ConsolePause>
-    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="nunit.framework">
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="soundio.cs" />
-    <Compile Include="SoundIOApi.cs" />
-    <Compile Include="SoundIOBackend.cs" />
-    <Compile Include="SoundIOChannelLayout.cs" />
-    <Compile Include="SoundIODevice.cs" />
-    <Compile Include="SoundIOException.cs" />
-    <Compile Include="SoundIOChannelId.cs" />
-    <Compile Include="SoundIOFormat.cs" />
-    <Compile Include="SoundIOOutStream.cs" />
-    <Compile Include="SoundIOChannelArea.cs" />
-    <Compile Include="SoundIOInStream.cs" />
-    <Compile Include="SoundIORingBuffer.cs" />
+    <Compile Include="SoundIOTest.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\external\libsoundio\libsoundio.so">
-      <Link>libsoundio.so</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\libsoundio-sharp\libsoundio-sharp.csproj">
+      <Project>{D6FB7880-23D7-44B7-827E-A471BA354D92}</Project>
+      <Name>libsoundio-sharp</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
 </Project>
