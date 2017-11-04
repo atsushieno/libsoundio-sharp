@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace LibSoundIOSharp
 {
 	public class SoundIO : IDisposable
 	{
-		IntPtr handle;
+		Pointer<SoundIo> handle;
 
 		public SoundIO ()
 		{
@@ -14,8 +15,118 @@ namespace LibSoundIOSharp
 
 		public void Dispose ()
 		{
+			foreach (var h in allocated_hglobals)
+				Marshal.FreeHGlobal (h);
 			Natives.soundio_destroy (handle);
 		}
+
+		SoundIo GetValue ()
+		{
+			return Marshal.PtrToStructure<SoundIo> (handle);
+		}
+
+		// fields
+
+		// FIXME: this should be taken care in more centralized/decent manner... we don't want to write
+		// this kind of code anywhere we need string marshaling.
+		List<IntPtr> allocated_hglobals = new List<IntPtr> ();
+
+		public string ApplicationName {
+			get { return Marshal.PtrToStringAnsi (GetValue ().app_name); }
+			set {
+				unsafe {
+					var existing = GetValue ().app_name;
+					if (allocated_hglobals.Contains (existing)) {
+						allocated_hglobals.Remove (existing);
+						Marshal.FreeHGlobal (existing);
+					}
+					var ptr = Marshal.StringToHGlobalAnsi (value);
+					Marshal.WriteIntPtr (handle, app_name_offset, ptr);
+					allocated_hglobals.Add (ptr);
+				}
+			}
+		}
+		static readonly int app_name_offset = (int)Marshal.OffsetOf<SoundIo> ("app_name");
+
+		public SoundIOBackend CurrentBackend {
+			// read only.
+			get { return (SoundIOBackend) GetValue ().current_backend; }
+		}
+
+		// emit_rtprio_warning
+		public Action EmitRealtimePriorityWarning {
+			get { return emit_rtprio_warning; }
+			set {
+				emit_rtprio_warning = value;
+				var ptr = Marshal.GetFunctionPointerForDelegate (on_devices_change);
+				Marshal.WriteIntPtr (handle, emit_rtprio_warning_offset, ptr);
+			}
+		}
+		static readonly int emit_rtprio_warning_offset = (int)Marshal.OffsetOf<SoundIo> ("emit_rtprio_warning");
+		Action emit_rtprio_warning;
+
+		// jack_error_callback
+		public Action<string> JackErrorCallback {
+			get { return jack_error_callback; }
+			set {
+				jack_error_callback = value;
+				var ptr = Marshal.GetFunctionPointerForDelegate (jack_error_callback);
+				Marshal.WriteIntPtr (handle, jack_error_callback_offset, ptr);
+			}
+		}
+		static readonly int jack_error_callback_offset = (int)Marshal.OffsetOf<SoundIo> ("jack_error_callback");
+		Action<string> jack_error_callback;
+
+		// jack_info_callback
+		public Action<string> JackInfoCallback {
+			get { return jack_info_callback; }
+			set {
+				jack_info_callback = value;
+				var ptr = Marshal.GetFunctionPointerForDelegate (jack_info_callback);
+				Marshal.WriteIntPtr (handle, jack_info_callback_offset, ptr);
+			}
+		}
+		static readonly int jack_info_callback_offset = (int)Marshal.OffsetOf<SoundIo> ("jack_info_callback");
+		Action<string> jack_info_callback;
+
+		// on_backend_disconnect
+		public Action<SoundIO,int> OnBackendDisconnect {
+			get { return on_backend_disconnect; }
+			set {
+				on_backend_disconnect = value;
+				var ptr = Marshal.GetFunctionPointerForDelegate (on_backend_disconnect);
+				Marshal.WriteIntPtr (handle, on_backend_disconnect_offset, ptr);
+			}
+		}
+		static readonly int on_backend_disconnect_offset = (int)Marshal.OffsetOf<SoundIo> ("on_backend_disconnect");
+		Action<SoundIO,int> on_backend_disconnect;
+
+		// on_devices_change
+		public Action<SoundIO> OnDevicesChange {
+			get { return on_devices_change; }
+			set {
+				on_devices_change = value;
+				var ptr = Marshal.GetFunctionPointerForDelegate (on_devices_change);
+				Marshal.WriteIntPtr (handle, on_devices_change_offset, ptr);
+			}
+		}
+		static readonly int on_devices_change_offset = (int)Marshal.OffsetOf<SoundIo> ("on_devices_change");
+		Action<SoundIO> on_devices_change;
+
+		// on_events_signal
+		public Action<SoundIO> OnEventsSignal {
+			get { return on_events_signal; }
+			set {
+				on_events_signal = value;
+				var ptr = Marshal.GetFunctionPointerForDelegate (on_events_signal);
+				Marshal.WriteIntPtr (handle, on_events_signal_offset, ptr);
+			}
+		}
+		static readonly int on_events_signal_offset = (int)Marshal.OffsetOf<SoundIo> ("on_events_signal");
+		Action<SoundIO> on_events_signal;
+
+
+		// functions
 
 		public int BackendCount {
 			get { return Natives.soundio_backend_count (handle); }

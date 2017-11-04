@@ -193,14 +193,14 @@ struct SoundIoChannelArea // soundio.h (319, 8)
 struct SoundIo // soundio.h (328, 8)
 {
 	[CTypeDetails ("Pointer<void>")]public System.IntPtr userdata;
-	[CTypeDetails ("Pointer<void (SoundIo *)>")]public System.Action<IntPtr> on_devices_change;
-	[CTypeDetails ("Pointer<void (SoundIo *, int)>")]public System.Action<IntPtr, int> on_backend_disconnect;
-	[CTypeDetails ("Pointer<void (SoundIo *)>")]public System.Action<IntPtr> on_events_signal;
+	[CTypeDetails ("Pointer<void (SoundIo *)>")]public Delegates.delegate0 on_devices_change;
+	[CTypeDetails ("Pointer<void (SoundIo *, int)>")]public Delegates.delegate1 on_backend_disconnect;
+	[CTypeDetails ("Pointer<void (SoundIo *)>")]public Delegates.delegate0 on_events_signal;
 	public SoundIoBackend current_backend;
 	[CTypeDetails ("Pointer<char>")]public IntPtr app_name;
-	[CTypeDetails ("Pointer<void (void)>")]public System.Action emit_rtprio_warning;
-	[CTypeDetails ("Pointer<void (const char *)>")]public System.Action<IntPtr> jack_info_callback;
-	[CTypeDetails ("Pointer<void (const char *)>")]public System.Action<IntPtr> jack_error_callback;
+	[CTypeDetails ("Pointer<void (void)>")]public Delegates.delegate2 emit_rtprio_warning;
+	[CTypeDetails ("Pointer<void (const char *)>")]public Delegates.delegate3 jack_info_callback;
+	[CTypeDetails ("Pointer<void (const char *)>")]public Delegates.delegate3 jack_error_callback;
 }
 
 [StructLayout (LayoutKind.Sequential)]
@@ -237,9 +237,9 @@ struct SoundIoOutStream // soundio.h (497, 8)
 	public double software_latency;
 	public float volume;
 	[CTypeDetails ("Pointer<void>")]public System.IntPtr userdata;
-	[CTypeDetails ("Pointer<void (SoundIoOutStream *, int, int)>")]public System.Action<IntPtr, int, int> write_callback;
-	[CTypeDetails ("Pointer<void (SoundIoOutStream *)>")]public System.Action<IntPtr> underflow_callback;
-	[CTypeDetails ("Pointer<void (SoundIoOutStream *, int)>")]public System.Action<IntPtr, int> error_callback;
+	[CTypeDetails ("Pointer<void (SoundIoOutStream *, int, int)>")]public Delegates.delegate4 write_callback;
+	[CTypeDetails ("Pointer<void (SoundIoOutStream *)>")]public Delegates.delegate5 underflow_callback;
+	[CTypeDetails ("Pointer<void (SoundIoOutStream *, int)>")]public Delegates.delegate6 error_callback;
 	[CTypeDetails ("Pointer<char>")]public IntPtr name;
 	public int non_terminal_hint;
 	public int bytes_per_frame;
@@ -256,9 +256,9 @@ struct SoundIoInStream // soundio.h (600, 8)
 	public SoundIoChannelLayout layout;
 	public double software_latency;
 	[CTypeDetails ("Pointer<void>")]public System.IntPtr userdata;
-	[CTypeDetails ("Pointer<void (SoundIoInStream *, int, int)>")]public System.Action<IntPtr, int, int> read_callback;
-	[CTypeDetails ("Pointer<void (SoundIoInStream *)>")]public System.Action<IntPtr> overflow_callback;
-	[CTypeDetails ("Pointer<void (SoundIoInStream *, int)>")]public System.Action<IntPtr, int> error_callback;
+	[CTypeDetails ("Pointer<void (SoundIoInStream *, int, int)>")]public Delegates.delegate7 read_callback;
+	[CTypeDetails ("Pointer<void (SoundIoInStream *)>")]public Delegates.delegate8 overflow_callback;
+	[CTypeDetails ("Pointer<void (SoundIoInStream *, int)>")]public Delegates.delegate9 error_callback;
 	[CTypeDetails ("Pointer<char>")]public IntPtr name;
 	public int non_terminal_hint;
 	public int bytes_per_frame;
@@ -571,6 +571,19 @@ class Natives
 
 }
 
+class Delegates
+{
+public delegate void delegate0 (IntPtr p0);
+public delegate void delegate1 (IntPtr p0, int p1);
+public delegate void delegate2 ();
+public delegate void delegate3 (IntPtr p0);
+public delegate void delegate4 (IntPtr p0, int p1, int p2);
+public delegate void delegate5 (IntPtr p0);
+public delegate void delegate6 (IntPtr p0, int p1);
+public delegate void delegate7 (IntPtr p0, int p1, int p2);
+public delegate void delegate8 (IntPtr p0);
+public delegate void delegate9 (IntPtr p0, int p1);
+}
 
 public struct Pointer<T>
 {

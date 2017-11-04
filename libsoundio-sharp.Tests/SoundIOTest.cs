@@ -37,5 +37,32 @@ namespace LibSoundIOSharp.Tests
 			foreach (SoundIOFormat f in Enum.GetValues (typeof (SoundIOFormat)))
 				Assert.IsNotNull (SoundIO.GetSoundFormatName (f), $"name expected for {f}");
 		}
+
+		[Test]
+		public void ApplicationName ()
+		{
+			var api = new SoundIO ();
+			Assert.AreEqual ("SoundIo", api.ApplicationName, "default app name unexpected");
+			api.ApplicationName = "MyApp";
+			Assert.AreEqual ("MyApp", api.ApplicationName, "app_name not assigned");
+		}
+
+		[Ignore ("this does not seem to be the way how this event is used.")]
+		[Test]
+		public void OnBackendDisconnect ()
+		{
+			var api = new SoundIO ();
+			string msg = null;
+			int err = -1;
+			api.OnBackendDisconnect = (sio, e) => {
+				msg = "disconnected";
+				err = e;
+			};
+			api.Connect ();
+			api.FlushEvents ();
+			api.Disconnect ();
+			Assert.AreEqual ("disconnected", msg, "msg not set");
+			Assert.AreEqual (0, err, "either error occured or event not fired");
+		}
 	}
 }
