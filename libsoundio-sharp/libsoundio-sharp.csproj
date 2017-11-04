@@ -33,8 +33,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="soundio.cs" />
-    <Compile Include="SoundIOApi.cs" />
+    <Compile Include="libsoundio-interop.cs" />
+    <Compile Include="SoundIO.cs" />
     <Compile Include="SoundIOBackend.cs" />
     <Compile Include="SoundIOChannelLayout.cs" />
     <Compile Include="SoundIODevice.cs" />

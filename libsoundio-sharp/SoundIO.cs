@@ -3,11 +3,11 @@ using System.Runtime.InteropServices;
 
 namespace LibSoundIOSharp
 {
-	public class SoundIOApi : IDisposable
+	public class SoundIO : IDisposable
 	{
 		IntPtr handle;
 
-		public SoundIOApi ()
+		public SoundIO ()
 		{
 			handle = Natives.soundio_create ();
 		}

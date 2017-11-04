@@ -169,9 +169,10 @@ enum SoundIoFormat // soundio.h (235, 6)
 [StructLayout (LayoutKind.Sequential)]
 struct SoundIoChannelLayout // soundio.h (306, 8)
 {
-	public Pointer<char> name;
+	[CTypeDetails ("Pointer<char>")]public IntPtr name;
 	public int channel_count;
-	public ConstArrayOf< SoundIoChannelId> channels;
+	[MarshalAs (UnmanagedType.ByValArray, SizeConst=24)]
+	[CTypeDetails ("ConstArrayOf<SoundIoChannelId>")] public SoundIoChannelId[] channels;
 }
 
 [StructLayout (LayoutKind.Sequential)]
@@ -184,38 +185,38 @@ struct SoundIoSampleRateRange // soundio.h (313, 8)
 [StructLayout (LayoutKind.Sequential)]
 struct SoundIoChannelArea // soundio.h (319, 8)
 {
-	public Pointer<byte> ptr;
+	[CTypeDetails ("Pointer<byte>")]public IntPtr ptr;
 	public int step;
 }
 
 [StructLayout (LayoutKind.Sequential)]
 struct SoundIo // soundio.h (328, 8)
 {
-	public System.IntPtr userdata;
-	public System.Action<Pointer<SoundIo>> on_devices_change;
-	public System.Action<Pointer<SoundIo>, int> on_backend_disconnect;
-	public System.Action<Pointer<SoundIo>> on_events_signal;
-	public  SoundIoBackend current_backend;
-	public Pointer<char> app_name;
-	public System.Action emit_rtprio_warning;
-	public System.Action<Pointer<char>> jack_info_callback;
-	public System.Action<Pointer<char>> jack_error_callback;
+	[CTypeDetails ("Pointer<void>")]public System.IntPtr userdata;
+	[CTypeDetails ("Pointer<void (SoundIo *)>")]public System.Action<IntPtr> on_devices_change;
+	[CTypeDetails ("Pointer<void (SoundIo *, int)>")]public System.Action<IntPtr, int> on_backend_disconnect;
+	[CTypeDetails ("Pointer<void (SoundIo *)>")]public System.Action<IntPtr> on_events_signal;
+	public SoundIoBackend current_backend;
+	[CTypeDetails ("Pointer<char>")]public IntPtr app_name;
+	[CTypeDetails ("Pointer<void (void)>")]public System.Action emit_rtprio_warning;
+	[CTypeDetails ("Pointer<void (const char *)>")]public System.Action<IntPtr> jack_info_callback;
+	[CTypeDetails ("Pointer<void (const char *)>")]public System.Action<IntPtr> jack_error_callback;
 }
 
 [StructLayout (LayoutKind.Sequential)]
 struct SoundIoDevice // soundio.h (387, 8)
 {
-	public Pointer<SoundIo> soundio;
-	public Pointer<byte> id;
-	public Pointer<byte> name;
-	public  SoundIoDeviceAim aim;
-	public Pointer<SoundIoChannelLayout> layouts;
+	[CTypeDetails ("Pointer<SoundIo>")]public IntPtr soundio;
+	[CTypeDetails ("Pointer<byte>")]public IntPtr id;
+	[CTypeDetails ("Pointer<byte>")]public IntPtr name;
+	public SoundIoDeviceAim aim;
+	[CTypeDetails ("Pointer<SoundIoChannelLayout>")]public IntPtr layouts;
 	public int layout_count;
 	public SoundIoChannelLayout current_layout;
-	public Pointer< SoundIoFormat> formats;
+	[CTypeDetails ("Pointer<SoundIoFormat>")]public IntPtr formats;
 	public int format_count;
-	public  SoundIoFormat current_format;
-	public Pointer<SoundIoSampleRateRange> sample_rates;
+	public SoundIoFormat current_format;
+	[CTypeDetails ("Pointer<SoundIoSampleRateRange>")]public IntPtr sample_rates;
 	public int sample_rate_count;
 	public int sample_rate_current;
 	public double software_latency_min;
@@ -229,17 +230,17 @@ struct SoundIoDevice // soundio.h (387, 8)
 [StructLayout (LayoutKind.Sequential)]
 struct SoundIoOutStream // soundio.h (497, 8)
 {
-	public Pointer<SoundIoDevice> device;
-	public  SoundIoFormat format;
+	[CTypeDetails ("Pointer<SoundIoDevice>")]public IntPtr device;
+	public SoundIoFormat format;
 	public int sample_rate;
 	public SoundIoChannelLayout layout;
 	public double software_latency;
 	public float volume;
-	public System.IntPtr userdata;
-	public System.Action<Pointer<SoundIoOutStream>, int, int> write_callback;
-	public System.Action<Pointer<SoundIoOutStream>> underflow_callback;
-	public System.Action<Pointer<SoundIoOutStream>, int> error_callback;
-	public Pointer<char> name;
+	[CTypeDetails ("Pointer<void>")]public System.IntPtr userdata;
+	[CTypeDetails ("Pointer<void (SoundIoOutStream *, int, int)>")]public System.Action<IntPtr, int, int> write_callback;
+	[CTypeDetails ("Pointer<void (SoundIoOutStream *)>")]public System.Action<IntPtr> underflow_callback;
+	[CTypeDetails ("Pointer<void (SoundIoOutStream *, int)>")]public System.Action<IntPtr, int> error_callback;
+	[CTypeDetails ("Pointer<char>")]public IntPtr name;
 	public int non_terminal_hint;
 	public int bytes_per_frame;
 	public int bytes_per_sample;
@@ -249,16 +250,16 @@ struct SoundIoOutStream // soundio.h (497, 8)
 [StructLayout (LayoutKind.Sequential)]
 struct SoundIoInStream // soundio.h (600, 8)
 {
-	public Pointer<SoundIoDevice> device;
-	public  SoundIoFormat format;
+	[CTypeDetails ("Pointer<SoundIoDevice>")]public IntPtr device;
+	public SoundIoFormat format;
 	public int sample_rate;
 	public SoundIoChannelLayout layout;
 	public double software_latency;
-	public System.IntPtr userdata;
-	public System.Action<Pointer<SoundIoInStream>, int, int> read_callback;
-	public System.Action<Pointer<SoundIoInStream>> overflow_callback;
-	public System.Action<Pointer<SoundIoInStream>, int> error_callback;
-	public Pointer<char> name;
+	[CTypeDetails ("Pointer<void>")]public System.IntPtr userdata;
+	[CTypeDetails ("Pointer<void (SoundIoInStream *, int, int)>")]public System.Action<IntPtr, int, int> read_callback;
+	[CTypeDetails ("Pointer<void (SoundIoInStream *)>")]public System.Action<IntPtr> overflow_callback;
+	[CTypeDetails ("Pointer<void (SoundIoInStream *, int)>")]public System.Action<IntPtr, int> error_callback;
+	[CTypeDetails ("Pointer<char>")]public IntPtr name;
 	public int non_terminal_hint;
 	public int bytes_per_frame;
 	public int bytes_per_sample;
@@ -274,7 +275,7 @@ class Natives
 {
 	// function soundio_version_string - soundio.h (682, 28)
 	[DllImport ("soundio")]
-	internal static extern Pointer<char> soundio_version_string ();
+	internal static extern IntPtr soundio_version_string ();
 
 	// function soundio_version_major - soundio.h (684, 20)
 	[DllImport ("soundio")]
@@ -290,71 +291,71 @@ class Natives
 
 	// function soundio_create - soundio.h (694, 32)
 	[DllImport ("soundio")]
-	internal static extern Pointer<SoundIo> soundio_create ();
+	internal static extern IntPtr soundio_create ();
 
 	// function soundio_destroy - soundio.h (695, 21)
 	[DllImport ("soundio")]
-	internal static extern void soundio_destroy (Pointer<SoundIo> soundio);
+	internal static extern void soundio_destroy ([CTypeDetails ("Pointer<SoundIo>")]IntPtr soundio);
 
 	// function soundio_connect - soundio.h (705, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_connect (Pointer<SoundIo> soundio);
+	internal static extern int soundio_connect ([CTypeDetails ("Pointer<SoundIo>")]IntPtr soundio);
 
 	// function soundio_connect_backend - soundio.h (717, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_connect_backend (Pointer<SoundIo> soundio,  SoundIoBackend backend);
+	internal static extern int soundio_connect_backend ([CTypeDetails ("Pointer<SoundIo>")]IntPtr soundio, SoundIoBackend backend);
 
 	// function soundio_disconnect - soundio.h (718, 21)
 	[DllImport ("soundio")]
-	internal static extern void soundio_disconnect (Pointer<SoundIo> soundio);
+	internal static extern void soundio_disconnect ([CTypeDetails ("Pointer<SoundIo>")]IntPtr soundio);
 
 	// function soundio_strerror - soundio.h (721, 28)
 	[DllImport ("soundio")]
-	internal static extern Pointer<char> soundio_strerror (int error);
+	internal static extern IntPtr soundio_strerror (int error);
 
 	// function soundio_backend_name - soundio.h (723, 28)
 	[DllImport ("soundio")]
-	internal static extern Pointer<char> soundio_backend_name ( SoundIoBackend backend);
+	internal static extern IntPtr soundio_backend_name (SoundIoBackend backend);
 
 	// function soundio_backend_count - soundio.h (726, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_backend_count (Pointer<SoundIo> soundio);
+	internal static extern int soundio_backend_count ([CTypeDetails ("Pointer<SoundIo>")]IntPtr soundio);
 
 	// function soundio_get_backend - soundio.h (729, 36)
 	[DllImport ("soundio")]
-	internal static extern  SoundIoBackend soundio_get_backend (Pointer<SoundIo> soundio, int index);
+	internal static extern SoundIoBackend soundio_get_backend ([CTypeDetails ("Pointer<SoundIo>")]IntPtr soundio, int index);
 
 	// function soundio_have_backend - soundio.h (732, 21)
 	[DllImport ("soundio")]
-	internal static extern int soundio_have_backend ( SoundIoBackend backend);
+	internal static extern int soundio_have_backend (SoundIoBackend backend);
 
 	// function soundio_flush_events - soundio.h (756, 21)
 	[DllImport ("soundio")]
-	internal static extern void soundio_flush_events (Pointer<SoundIo> soundio);
+	internal static extern void soundio_flush_events ([CTypeDetails ("Pointer<SoundIo>")]IntPtr soundio);
 
 	// function soundio_wait_events - soundio.h (760, 21)
 	[DllImport ("soundio")]
-	internal static extern void soundio_wait_events (Pointer<SoundIo> soundio);
+	internal static extern void soundio_wait_events ([CTypeDetails ("Pointer<SoundIo>")]IntPtr soundio);
 
 	// function soundio_wakeup - soundio.h (763, 21)
 	[DllImport ("soundio")]
-	internal static extern void soundio_wakeup (Pointer<SoundIo> soundio);
+	internal static extern void soundio_wakeup ([CTypeDetails ("Pointer<SoundIo>")]IntPtr soundio);
 
 	// function soundio_force_device_scan - soundio.h (780, 21)
 	[DllImport ("soundio")]
-	internal static extern void soundio_force_device_scan (Pointer<SoundIo> soundio);
+	internal static extern void soundio_force_device_scan ([CTypeDetails ("Pointer<SoundIo>")]IntPtr soundio);
 
 	// function soundio_channel_layout_equal - soundio.h (787, 21)
 	[DllImport ("soundio")]
-	internal static extern int soundio_channel_layout_equal (Pointer<SoundIoChannelLayout> a, Pointer<SoundIoChannelLayout> b);
+	internal static extern int soundio_channel_layout_equal ([CTypeDetails ("Pointer<SoundIoChannelLayout>")]IntPtr a, [CTypeDetails ("Pointer<SoundIoChannelLayout>")]IntPtr b);
 
 	// function soundio_get_channel_name - soundio.h (791, 28)
 	[DllImport ("soundio")]
-	internal static extern Pointer<char> soundio_get_channel_name ( SoundIoChannelId id);
+	internal static extern IntPtr soundio_get_channel_name (SoundIoChannelId id);
 
 	// function soundio_parse_channel_id - soundio.h (795, 38)
 	[DllImport ("soundio")]
-	internal static extern  SoundIoChannelId soundio_parse_channel_id (Pointer<char> str, int str_len);
+	internal static extern SoundIoChannelId soundio_parse_channel_id ([CTypeDetails ("Pointer<char>")]IntPtr str, int str_len);
 
 	// function soundio_channel_layout_builtin_count - soundio.h (798, 20)
 	[DllImport ("soundio")]
@@ -362,211 +363,211 @@ class Natives
 
 	// function soundio_channel_layout_get_builtin - soundio.h (803, 51)
 	[DllImport ("soundio")]
-	internal static extern Pointer<SoundIoChannelLayout> soundio_channel_layout_get_builtin (int index);
+	internal static extern IntPtr soundio_channel_layout_get_builtin (int index);
 
 	// function soundio_channel_layout_get_default - soundio.h (806, 51)
 	[DllImport ("soundio")]
-	internal static extern Pointer<SoundIoChannelLayout> soundio_channel_layout_get_default (int channel_count);
+	internal static extern IntPtr soundio_channel_layout_get_default (int channel_count);
 
 	// function soundio_channel_layout_find_channel - soundio.h (809, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_channel_layout_find_channel (Pointer<SoundIoChannelLayout> layout,  SoundIoChannelId channel);
+	internal static extern int soundio_channel_layout_find_channel ([CTypeDetails ("Pointer<SoundIoChannelLayout>")]IntPtr layout, SoundIoChannelId channel);
 
 	// function soundio_channel_layout_detect_builtin - soundio.h (814, 21)
 	[DllImport ("soundio")]
-	internal static extern int soundio_channel_layout_detect_builtin (Pointer<SoundIoChannelLayout> layout);
+	internal static extern int soundio_channel_layout_detect_builtin ([CTypeDetails ("Pointer<SoundIoChannelLayout>")]IntPtr layout);
 
 	// function soundio_best_matching_channel_layout - soundio.h (819, 51)
 	[DllImport ("soundio")]
-	internal static extern Pointer<SoundIoChannelLayout> soundio_best_matching_channel_layout (Pointer<SoundIoChannelLayout> preferred_layouts, int preferred_layout_count, Pointer<SoundIoChannelLayout> available_layouts, int available_layout_count);
+	internal static extern IntPtr soundio_best_matching_channel_layout ([CTypeDetails ("Pointer<SoundIoChannelLayout>")]IntPtr preferred_layouts, int preferred_layout_count, [CTypeDetails ("Pointer<SoundIoChannelLayout>")]IntPtr available_layouts, int available_layout_count);
 
 	// function soundio_sort_channel_layouts - soundio.h (824, 21)
 	[DllImport ("soundio")]
-	internal static extern void soundio_sort_channel_layouts (Pointer<SoundIoChannelLayout> layouts, int layout_count);
+	internal static extern void soundio_sort_channel_layouts ([CTypeDetails ("Pointer<SoundIoChannelLayout>")]IntPtr layouts, int layout_count);
 
 	// function soundio_get_bytes_per_sample - soundio.h (830, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_get_bytes_per_sample ( SoundIoFormat format);
+	internal static extern int soundio_get_bytes_per_sample (SoundIoFormat format);
 
 	// function soundio_get_bytes_per_frame - soundio.h (833, 19)
 	[DllImport ("soundio")]
-	internal static extern int soundio_get_bytes_per_frame ( SoundIoFormat format, int channel_count);
+	internal static extern int soundio_get_bytes_per_frame (SoundIoFormat format, int channel_count);
 
 	// function soundio_get_bytes_per_second - soundio.h (838, 19)
 	[DllImport ("soundio")]
-	internal static extern int soundio_get_bytes_per_second ( SoundIoFormat format, int channel_count, int sample_rate);
+	internal static extern int soundio_get_bytes_per_second (SoundIoFormat format, int channel_count, int sample_rate);
 
 	// function soundio_format_string - soundio.h (845, 29)
 	[DllImport ("soundio")]
-	internal static extern Pointer<char> soundio_format_string ( SoundIoFormat format);
+	internal static extern IntPtr soundio_format_string (SoundIoFormat format);
 
 	// function soundio_input_device_count - soundio.h (861, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_input_device_count (Pointer<SoundIo> soundio);
+	internal static extern int soundio_input_device_count ([CTypeDetails ("Pointer<SoundIo>")]IntPtr soundio);
 
 	// function soundio_output_device_count - soundio.h (864, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_output_device_count (Pointer<SoundIo> soundio);
+	internal static extern int soundio_output_device_count ([CTypeDetails ("Pointer<SoundIo>")]IntPtr soundio);
 
 	// function soundio_get_input_device - soundio.h (870, 38)
 	[DllImport ("soundio")]
-	internal static extern Pointer<SoundIoDevice> soundio_get_input_device (Pointer<SoundIo> soundio, int index);
+	internal static extern IntPtr soundio_get_input_device ([CTypeDetails ("Pointer<SoundIo>")]IntPtr soundio, int index);
 
 	// function soundio_get_output_device - soundio.h (875, 38)
 	[DllImport ("soundio")]
-	internal static extern Pointer<SoundIoDevice> soundio_get_output_device (Pointer<SoundIo> soundio, int index);
+	internal static extern IntPtr soundio_get_output_device ([CTypeDetails ("Pointer<SoundIo>")]IntPtr soundio, int index);
 
 	// function soundio_default_input_device_index - soundio.h (880, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_default_input_device_index (Pointer<SoundIo> soundio);
+	internal static extern int soundio_default_input_device_index ([CTypeDetails ("Pointer<SoundIo>")]IntPtr soundio);
 
 	// function soundio_default_output_device_index - soundio.h (885, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_default_output_device_index (Pointer<SoundIo> soundio);
+	internal static extern int soundio_default_output_device_index ([CTypeDetails ("Pointer<SoundIo>")]IntPtr soundio);
 
 	// function soundio_device_ref - soundio.h (888, 21)
 	[DllImport ("soundio")]
-	internal static extern void soundio_device_ref (Pointer<SoundIoDevice> device);
+	internal static extern void soundio_device_ref ([CTypeDetails ("Pointer<SoundIoDevice>")]IntPtr device);
 
 	// function soundio_device_unref - soundio.h (891, 21)
 	[DllImport ("soundio")]
-	internal static extern void soundio_device_unref (Pointer<SoundIoDevice> device);
+	internal static extern void soundio_device_unref ([CTypeDetails ("Pointer<SoundIoDevice>")]IntPtr device);
 
 	// function soundio_device_equal - soundio.h (895, 21)
 	[DllImport ("soundio")]
-	internal static extern int soundio_device_equal (Pointer<SoundIoDevice> a, Pointer<SoundIoDevice> b);
+	internal static extern int soundio_device_equal ([CTypeDetails ("Pointer<SoundIoDevice>")]IntPtr a, [CTypeDetails ("Pointer<SoundIoDevice>")]IntPtr b);
 
 	// function soundio_device_sort_channel_layouts - soundio.h (900, 21)
 	[DllImport ("soundio")]
-	internal static extern void soundio_device_sort_channel_layouts (Pointer<SoundIoDevice> device);
+	internal static extern void soundio_device_sort_channel_layouts ([CTypeDetails ("Pointer<SoundIoDevice>")]IntPtr device);
 
 	// function soundio_device_supports_format - soundio.h (904, 21)
 	[DllImport ("soundio")]
-	internal static extern int soundio_device_supports_format (Pointer<SoundIoDevice> device,  SoundIoFormat format);
+	internal static extern int soundio_device_supports_format ([CTypeDetails ("Pointer<SoundIoDevice>")]IntPtr device, SoundIoFormat format);
 
 	// function soundio_device_supports_layout - soundio.h (909, 21)
 	[DllImport ("soundio")]
-	internal static extern int soundio_device_supports_layout (Pointer<SoundIoDevice> device, Pointer<SoundIoChannelLayout> layout);
+	internal static extern int soundio_device_supports_layout ([CTypeDetails ("Pointer<SoundIoDevice>")]IntPtr device, [CTypeDetails ("Pointer<SoundIoChannelLayout>")]IntPtr layout);
 
 	// function soundio_device_supports_sample_rate - soundio.h (914, 21)
 	[DllImport ("soundio")]
-	internal static extern int soundio_device_supports_sample_rate (Pointer<SoundIoDevice> device, int sample_rate);
+	internal static extern int soundio_device_supports_sample_rate ([CTypeDetails ("Pointer<SoundIoDevice>")]IntPtr device, int sample_rate);
 
 	// function soundio_device_nearest_sample_rate - soundio.h (919, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_device_nearest_sample_rate (Pointer<SoundIoDevice> device, int sample_rate);
+	internal static extern int soundio_device_nearest_sample_rate ([CTypeDetails ("Pointer<SoundIoDevice>")]IntPtr device, int sample_rate);
 
 	// function soundio_outstream_create - soundio.h (929, 41)
 	[DllImport ("soundio")]
-	internal static extern Pointer<SoundIoOutStream> soundio_outstream_create (Pointer<SoundIoDevice> device);
+	internal static extern IntPtr soundio_outstream_create ([CTypeDetails ("Pointer<SoundIoDevice>")]IntPtr device);
 
 	// function soundio_outstream_destroy - soundio.h (931, 21)
 	[DllImport ("soundio")]
-	internal static extern void soundio_outstream_destroy (Pointer<SoundIoOutStream> outstream);
+	internal static extern void soundio_outstream_destroy ([CTypeDetails ("Pointer<SoundIoOutStream>")]IntPtr outstream);
 
 	// function soundio_outstream_open - soundio.h (954, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_outstream_open (Pointer<SoundIoOutStream> outstream);
+	internal static extern int soundio_outstream_open ([CTypeDetails ("Pointer<SoundIoOutStream>")]IntPtr outstream);
 
 	// function soundio_outstream_start - soundio.h (965, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_outstream_start (Pointer<SoundIoOutStream> outstream);
+	internal static extern int soundio_outstream_start ([CTypeDetails ("Pointer<SoundIoOutStream>")]IntPtr outstream);
 
 	// function soundio_outstream_begin_write - soundio.h (997, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_outstream_begin_write (Pointer<SoundIoOutStream> outstream, Pointer<Pointer<SoundIoChannelArea>> areas, Pointer<int> frame_count);
+	internal static extern int soundio_outstream_begin_write ([CTypeDetails ("Pointer<SoundIoOutStream>")]IntPtr outstream, [CTypeDetails ("Pointer<IntPtr>")]IntPtr areas, [CTypeDetails ("Pointer<int>")]IntPtr frame_count);
 
 	// function soundio_outstream_end_write - soundio.h (1009, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_outstream_end_write (Pointer<SoundIoOutStream> outstream);
+	internal static extern int soundio_outstream_end_write ([CTypeDetails ("Pointer<SoundIoOutStream>")]IntPtr outstream);
 
 	// function soundio_outstream_clear_buffer - soundio.h (1024, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_outstream_clear_buffer (Pointer<SoundIoOutStream> outstream);
+	internal static extern int soundio_outstream_clear_buffer ([CTypeDetails ("Pointer<SoundIoOutStream>")]IntPtr outstream);
 
 	// function soundio_outstream_pause - soundio.h (1045, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_outstream_pause (Pointer<SoundIoOutStream> outstream, int pause);
+	internal static extern int soundio_outstream_pause ([CTypeDetails ("Pointer<SoundIoOutStream>")]IntPtr outstream, int pause);
 
 	// function soundio_outstream_get_latency - soundio.h (1058, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_outstream_get_latency (Pointer<SoundIoOutStream> outstream, Pointer<double> out_latency);
+	internal static extern int soundio_outstream_get_latency ([CTypeDetails ("Pointer<SoundIoOutStream>")]IntPtr outstream, [CTypeDetails ("Pointer<double>")]IntPtr out_latency);
 
 	// function soundio_outstream_set_volume - soundio.h (1061, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_outstream_set_volume (Pointer<SoundIoOutStream> outstream, double volume);
+	internal static extern int soundio_outstream_set_volume ([CTypeDetails ("Pointer<SoundIoOutStream>")]IntPtr outstream, double volume);
 
 	// function soundio_instream_create - soundio.h (1071, 40)
 	[DllImport ("soundio")]
-	internal static extern Pointer<SoundIoInStream> soundio_instream_create (Pointer<SoundIoDevice> device);
+	internal static extern IntPtr soundio_instream_create ([CTypeDetails ("Pointer<SoundIoDevice>")]IntPtr device);
 
 	// function soundio_instream_destroy - soundio.h (1073, 21)
 	[DllImport ("soundio")]
-	internal static extern void soundio_instream_destroy (Pointer<SoundIoInStream> instream);
+	internal static extern void soundio_instream_destroy ([CTypeDetails ("Pointer<SoundIoInStream>")]IntPtr instream);
 
 	// function soundio_instream_open - soundio.h (1093, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_instream_open (Pointer<SoundIoInStream> instream);
+	internal static extern int soundio_instream_open ([CTypeDetails ("Pointer<SoundIoInStream>")]IntPtr instream);
 
 	// function soundio_instream_start - soundio.h (1102, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_instream_start (Pointer<SoundIoInStream> instream);
+	internal static extern int soundio_instream_start ([CTypeDetails ("Pointer<SoundIoInStream>")]IntPtr instream);
 
 	// function soundio_instream_begin_read - soundio.h (1133, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_instream_begin_read (Pointer<SoundIoInStream> instream, Pointer<Pointer<SoundIoChannelArea>> areas, Pointer<int> frame_count);
+	internal static extern int soundio_instream_begin_read ([CTypeDetails ("Pointer<SoundIoInStream>")]IntPtr instream, [CTypeDetails ("Pointer<IntPtr>")]IntPtr areas, [CTypeDetails ("Pointer<int>")]IntPtr frame_count);
 
 	// function soundio_instream_end_read - soundio.h (1143, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_instream_end_read (Pointer<SoundIoInStream> instream);
+	internal static extern int soundio_instream_end_read ([CTypeDetails ("Pointer<SoundIoInStream>")]IntPtr instream);
 
 	// function soundio_instream_pause - soundio.h (1156, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_instream_pause (Pointer<SoundIoInStream> instream, int pause);
+	internal static extern int soundio_instream_pause ([CTypeDetails ("Pointer<SoundIoInStream>")]IntPtr instream, int pause);
 
 	// function soundio_instream_get_latency - soundio.h (1166, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_instream_get_latency (Pointer<SoundIoInStream> instream, Pointer<double> out_latency);
+	internal static extern int soundio_instream_get_latency ([CTypeDetails ("Pointer<SoundIoInStream>")]IntPtr instream, [CTypeDetails ("Pointer<double>")]IntPtr out_latency);
 
 	// function soundio_ring_buffer_create - soundio.h (1181, 42)
 	[DllImport ("soundio")]
-	internal static extern Pointer<SoundIoRingBuffer> soundio_ring_buffer_create (Pointer<SoundIo> soundio, int requested_capacity);
+	internal static extern IntPtr soundio_ring_buffer_create ([CTypeDetails ("Pointer<SoundIo>")]IntPtr soundio, int requested_capacity);
 
 	// function soundio_ring_buffer_destroy - soundio.h (1182, 21)
 	[DllImport ("soundio")]
-	internal static extern void soundio_ring_buffer_destroy (Pointer<SoundIoRingBuffer> ring_buffer);
+	internal static extern void soundio_ring_buffer_destroy ([CTypeDetails ("Pointer<SoundIoRingBuffer>")]IntPtr ring_buffer);
 
 	// function soundio_ring_buffer_capacity - soundio.h (1186, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_ring_buffer_capacity (Pointer<SoundIoRingBuffer> ring_buffer);
+	internal static extern int soundio_ring_buffer_capacity ([CTypeDetails ("Pointer<SoundIoRingBuffer>")]IntPtr ring_buffer);
 
 	// function soundio_ring_buffer_write_ptr - soundio.h (1189, 22)
 	[DllImport ("soundio")]
-	internal static extern Pointer<byte> soundio_ring_buffer_write_ptr (Pointer<SoundIoRingBuffer> ring_buffer);
+	internal static extern IntPtr soundio_ring_buffer_write_ptr ([CTypeDetails ("Pointer<SoundIoRingBuffer>")]IntPtr ring_buffer);
 
 	// function soundio_ring_buffer_advance_write_ptr - soundio.h (1191, 21)
 	[DllImport ("soundio")]
-	internal static extern void soundio_ring_buffer_advance_write_ptr (Pointer<SoundIoRingBuffer> ring_buffer, int count);
+	internal static extern void soundio_ring_buffer_advance_write_ptr ([CTypeDetails ("Pointer<SoundIoRingBuffer>")]IntPtr ring_buffer, int count);
 
 	// function soundio_ring_buffer_read_ptr - soundio.h (1194, 22)
 	[DllImport ("soundio")]
-	internal static extern Pointer<byte> soundio_ring_buffer_read_ptr (Pointer<SoundIoRingBuffer> ring_buffer);
+	internal static extern IntPtr soundio_ring_buffer_read_ptr ([CTypeDetails ("Pointer<SoundIoRingBuffer>")]IntPtr ring_buffer);
 
 	// function soundio_ring_buffer_advance_read_ptr - soundio.h (1196, 21)
 	[DllImport ("soundio")]
-	internal static extern void soundio_ring_buffer_advance_read_ptr (Pointer<SoundIoRingBuffer> ring_buffer, int count);
+	internal static extern void soundio_ring_buffer_advance_read_ptr ([CTypeDetails ("Pointer<SoundIoRingBuffer>")]IntPtr ring_buffer, int count);
 
 	// function soundio_ring_buffer_fill_count - soundio.h (1199, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_ring_buffer_fill_count (Pointer<SoundIoRingBuffer> ring_buffer);
+	internal static extern int soundio_ring_buffer_fill_count ([CTypeDetails ("Pointer<SoundIoRingBuffer>")]IntPtr ring_buffer);
 
 	// function soundio_ring_buffer_free_count - soundio.h (1202, 20)
 	[DllImport ("soundio")]
-	internal static extern int soundio_ring_buffer_free_count (Pointer<SoundIoRingBuffer> ring_buffer);
+	internal static extern int soundio_ring_buffer_free_count ([CTypeDetails ("Pointer<SoundIoRingBuffer>")]IntPtr ring_buffer);
 
 	// function soundio_ring_buffer_clear - soundio.h (1205, 21)
 	[DllImport ("soundio")]
-	internal static extern void soundio_ring_buffer_clear (Pointer<SoundIoRingBuffer> ring_buffer);
+	internal static extern void soundio_ring_buffer_clear ([CTypeDetails ("Pointer<SoundIoRingBuffer>")]IntPtr ring_buffer);
 
 }
 
@@ -581,8 +582,37 @@ public struct Pointer<T>
 	{
 		Handle = handle;
 	}
+
+	public override bool Equals (object obj)
+	{
+		return obj is Pointer<T> && this == (Pointer<T>) obj;
+	}
+
+	public override int GetHashCode ()
+	{
+		return (int) Handle;
+	}
+
+	public static bool operator == (Pointer<T> p1, Pointer<T> p2)
+	{
+		return p1.Handle == p2.Handle;
+	}
+
+	public static bool operator != (Pointer<T> p1, Pointer<T> p2)
+	{
+		return p1.Handle != p2.Handle;
+	}
 }
 public struct ArrayOf<T> {}
 public struct ConstArrayOf<T> {}
+public class CTypeDetailsAttribute : Attribute
+{
+	public CTypeDetailsAttribute (string value)
+	{
+		Value = value;
+	}
+
+	public string Value { get; set; }
+}
 
 }

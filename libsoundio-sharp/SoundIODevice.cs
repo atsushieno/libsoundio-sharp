@@ -50,5 +50,15 @@ namespace LibSoundIOSharp
 		{
 			return Natives.soundio_device_nearest_sample_rate (handle, sampleRate);
 		}
+
+		public SoundIOInStream CreateInStream ()
+		{
+			return new SoundIOInStream (Natives.soundio_instream_create (handle));
+		}
+
+		public SoundIOOutStream CreateOutStream ()
+		{
+			return new SoundIOOutStream (Natives.soundio_outstream_create (handle));
+		}
 	}
 }

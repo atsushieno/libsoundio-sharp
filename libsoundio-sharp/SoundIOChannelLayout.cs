@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.InteropServices;
 
 namespace LibSoundIOSharp
@@ -17,7 +19,7 @@ namespace LibSoundIOSharp
 		public static SoundIOChannelLayout GetDefault (int channelCount)
 		{
 			var handle = Natives.soundio_channel_layout_get_default (channelCount);
-			return handle == IntPtr.Zero ? null : new SoundIOChannelLayout (handle);
+			return (IntPtr) handle == IntPtr.Zero ? null : new SoundIOChannelLayout (handle);
 		}
 
 		public static SoundIOChannelId ParseChannelId (string name)
@@ -34,12 +36,31 @@ namespace LibSoundIOSharp
 
 		// instance members
 
-		internal SoundIOChannelLayout (IntPtr handle)
+		internal SoundIOChannelLayout (Pointer<SoundIoChannelLayout> handle)
 		{
 			this.handle = handle;
 		}
 
-		readonly IntPtr handle;
+		readonly Pointer<SoundIoChannelLayout> handle;
+
+		public int ChannelCount {
+			get { return GetValue ().channel_count; }
+		}
+
+		public string Name {
+			get { return Marshal.PtrToStringAnsi (GetValue ().name); }
+		}
+
+		public IEnumerable<SoundIOChannelId> Channels {
+			get {
+				return GetValue ().channels.Cast<SoundIOChannelId> ();
+			}
+		}
+
+		internal SoundIoChannelLayout GetValue ()
+		{
+			return Marshal.PtrToStructure<SoundIoChannelLayout> (handle);
+		}
 
 		public override bool Equals (object other)
 		{
@@ -49,15 +70,13 @@ namespace LibSoundIOSharp
 
 		public override int GetHashCode ()
 		{
-			return (int) handle;
+			return handle.GetHashCode ();
 		}
 
 		public string DetectBuiltInName ()
 		{
-			if (Natives.soundio_channel_layout_detect_builtin (handle) != 0) {
-				var s = Marshal.PtrToStructure<SoundIoChannelLayout> (handle);
-				return Marshal.PtrToStringAnsi (s.name);
-			}
+			if (Natives.soundio_channel_layout_detect_builtin (handle) != 0)
+				return Marshal.PtrToStringAnsi (GetValue ().name);
 			return null;
 		}
 

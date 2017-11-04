@@ -1,7 +1,7 @@
 
 CONFIGURATION = Debug
 
-GEN_SOURCES = libsoundio-sharp/soundio.cs
+GEN_SOURCES = libsoundio-sharp/libsoundio-interop.cs
 MANAGED_LIB = libsoundio-sharp/bin/$(CONFIGURATION)/libsoundio-sharp.dll
 SHARED_LIB = external/libsoundio/libsoundio.so
 PINVOKEGEN = external/nclang/samples/PInvokeGenerator/bin/Debug/PInvokeGenerator.exe
