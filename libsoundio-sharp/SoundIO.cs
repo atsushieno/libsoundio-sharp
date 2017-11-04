@@ -13,6 +13,11 @@ namespace LibSoundIOSharp
 			handle = Natives.soundio_create ();
 		}
 
+		internal SoundIO (Pointer<SoundIo> handle)
+		{
+			this.handle = handle;
+		}
+
 		public void Dispose ()
 		{
 			foreach (var h in allocated_hglobals)
@@ -20,12 +25,35 @@ namespace LibSoundIOSharp
 			Natives.soundio_destroy (handle);
 		}
 
+		// Equality (based on handle)
+
+		public override bool Equals (object other)
+		{
+			var d = other as SoundIO;
+			return d != null && this.handle == d.handle;
+		}
+
+		public override int GetHashCode ()
+		{
+			return (int) (IntPtr) handle;
+		}
+
+		public static bool operator == (SoundIO obj1, SoundIO obj2)
+		{
+			return (object)obj1 == null ? (object)obj2 == null : obj1.Equals (obj2);
+		}
+
+		public static bool operator != (SoundIO obj1, SoundIO obj2)
+		{
+			return (object)obj1 == null ? (object)obj2 != null : !obj1.Equals (obj2);
+		}
+
+		// fields
+
 		SoundIo GetValue ()
 		{
 			return Marshal.PtrToStructure<SoundIo> (handle);
 		}
-
-		// fields
 
 		// FIXME: this should be taken care in more centralized/decent manner... we don't want to write
 		// this kind of code anywhere we need string marshaling.

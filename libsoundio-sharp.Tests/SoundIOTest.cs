@@ -45,6 +45,7 @@ namespace LibSoundIOSharp.Tests
 			Assert.AreEqual ("SoundIo", api.ApplicationName, "default app name unexpected");
 			api.ApplicationName = "MyApp";
 			Assert.AreEqual ("MyApp", api.ApplicationName, "app_name not assigned");
+			api.Dispose ();
 		}
 
 		[Ignore ("this does not seem to be the way how this event is used.")]
@@ -63,6 +64,7 @@ namespace LibSoundIOSharp.Tests
 			api.Disconnect ();
 			Assert.AreEqual ("disconnected", msg, "msg not set");
 			Assert.AreEqual (0, err, "either error occured or event not fired");
+			api.Dispose ();
 		}
 	}
 }

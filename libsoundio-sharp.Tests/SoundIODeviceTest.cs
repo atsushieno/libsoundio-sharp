@@ -29,6 +29,27 @@ namespace LibSoundIOSharp.Tests
 		}
 
 		[Test]
+		public void Properties ()
+		{
+			var api = new SoundIO ();
+			api.Connect ();
+			try {
+				api.FlushEvents ();
+				var dev = api.GetOutputDevice (api.DefaultOutputDeviceIndex);
+				foreach (var p in typeof (SoundIODevice).GetProperties ()) {
+					try {
+						p.GetValue (dev);
+					} catch (Exception ex) {
+						Assert.Fail ("Failed to get property " + p + " : " + ex);
+					}
+				}
+			} finally {
+				api.Disconnect ();
+				api.Dispose ();
+			}
+		}
+
+		[Test]
 		public void WithDefaultOutputDevice ()
 		{
 			var api = new SoundIO ();

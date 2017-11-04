@@ -45,6 +45,8 @@
     <Compile Include="SoundIOChannelArea.cs" />
     <Compile Include="SoundIOInStream.cs" />
     <Compile Include="SoundIORingBuffer.cs" />
+    <Compile Include="SoundIODeviceAim.cs" />
+    <Compile Include="SoundIOSampleRateRange.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\external\libsoundio\libsoundio.so">

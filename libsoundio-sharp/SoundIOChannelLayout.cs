@@ -43,6 +43,11 @@ namespace LibSoundIOSharp
 
 		readonly Pointer<SoundIoChannelLayout> handle;
 
+		internal SoundIoChannelLayout GetValue ()
+		{
+			return Marshal.PtrToStructure<SoundIoChannelLayout> (handle);
+		}
+
 		public int ChannelCount {
 			get { return GetValue ().channel_count; }
 		}
@@ -55,11 +60,6 @@ namespace LibSoundIOSharp
 			get {
 				return GetValue ().channels.Cast<SoundIOChannelId> ();
 			}
-		}
-
-		internal SoundIoChannelLayout GetValue ()
-		{
-			return Marshal.PtrToStructure<SoundIoChannelLayout> (handle);
 		}
 
 		public override bool Equals (object other)

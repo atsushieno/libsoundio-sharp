@@ -17,6 +17,31 @@ namespace LibSoundIOSharp
 			Natives.soundio_instream_destroy (handle);
 		}
 
+		// Equality (based on handle)
+
+		public override bool Equals (object other)
+		{
+			var d = other as SoundIOInStream;
+			return d != null && (this.handle == d.handle);
+		}
+
+		public override int GetHashCode ()
+		{
+			return (int)(IntPtr)handle;
+		}
+
+		public static bool operator == (SoundIOInStream obj1, SoundIOInStream obj2)
+		{
+			return (object)obj1 == null ? (object)obj2 == null : obj1.Equals (obj2);
+		}
+
+		public static bool operator != (SoundIOInStream obj1, SoundIOInStream obj2)
+		{
+			return (object)obj1 == null ? (object)obj2 != null : !obj1.Equals (obj2);
+		}
+
+		// functions
+
 		public void Open ()
 		{
 			var ret = (SoundIoError) Natives.soundio_instream_open (handle);
