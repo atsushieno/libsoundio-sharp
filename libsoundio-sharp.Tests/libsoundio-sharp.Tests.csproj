@@ -34,6 +34,8 @@
     <Compile Include="SoundIOTest.cs" />
     <Compile Include="SoundIOChannelLayoutTest.cs" />
     <Compile Include="SoundIODeviceTest.cs" />
+    <Compile Include="SoundIOOutStreamTest.cs" />
+    <Compile Include="SoundIOInStreamTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

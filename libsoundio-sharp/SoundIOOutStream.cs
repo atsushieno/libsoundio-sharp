@@ -39,6 +39,96 @@ namespace LibSoundIOSharp
 			return (object)obj1 == null ? (object)obj2 != null : !obj1.Equals (obj2);
 		}
 
+		// fields
+
+		SoundIoInStream GetValue ()
+		{
+			return Marshal.PtrToStructure<SoundIoInStream> (handle);
+		}
+
+		public SoundIODevice Device {
+			get { return new SoundIODevice (GetValue ().device); }
+		}
+
+		public SoundIOFormat Format {
+			get { return (SoundIOFormat) GetValue ().format; }
+		}
+
+		public int SampleRate {
+			get { return GetValue ().sample_rate; }
+		}
+
+		static readonly int layout_offset = (int) Marshal.OffsetOf<SoundIoOutStream> ("layout");
+		public SoundIOChannelLayout ChannelLayout {
+			get { return new SoundIOChannelLayout ((IntPtr) handle + layout_offset); }
+		}
+
+		public double SoftwareLatency {
+			get { return GetValue ().software_latency; }
+		}
+
+		// error_callback
+		public Action<SoundIOInStream> ErrorCallback {
+			get { return error_callback; }
+			set {
+				error_callback = value;
+				var ptr = Marshal.GetFunctionPointerForDelegate (error_callback);
+				Marshal.WriteIntPtr (handle, error_callback_offset, ptr);
+			}
+		}
+		static readonly int error_callback_offset = (int)Marshal.OffsetOf<SoundIoOutStream> ("error_callback");
+		Action<SoundIOInStream> error_callback;
+
+		// write_callback
+		public Action<SoundIOInStream, int, int> WriteCallback {
+			get { return write_callback; }
+			set {
+				write_callback = value;
+				var ptr = Marshal.GetFunctionPointerForDelegate (write_callback);
+				Marshal.WriteIntPtr (handle, write_callback_offset, ptr);
+			}
+		}
+		static readonly int write_callback_offset = (int)Marshal.OffsetOf<SoundIoOutStream> ("write_callback");
+		Action<SoundIOInStream, int, int> write_callback;
+
+		// underflow_callback
+		public Action<SoundIOInStream> UnderflowCallback {
+			get { return underflow_callback; }
+			set {
+				underflow_callback = value;
+				var ptr = Marshal.GetFunctionPointerForDelegate (underflow_callback);
+				Marshal.WriteIntPtr (handle, underflow_callback_offset, ptr);
+			}
+		}
+		static readonly int underflow_callback_offset = (int)Marshal.OffsetOf<SoundIoOutStream> ("underflow_callback");
+		Action<SoundIOInStream> underflow_callback;
+
+		public string Name {
+			get {
+				var ptr = GetValue ().name;
+				return ptr == IntPtr.Zero ? null : Marshal.PtrToStringAuto (ptr); 
+			}
+		}
+
+		public bool NonTerminalHint {
+			get { return GetValue ().non_terminal_hint != 0; }
+		}
+
+		public int BytesPerFrame {
+			get { return GetValue ().bytes_per_frame; }
+		}
+
+		public int BytesPerSample {
+			get { return GetValue ().bytes_per_sample; }
+		}
+
+		public string LayoutErrorMessage {
+			get {
+				var code = (SoundIoError) GetValue ().layout_error;
+				return code == SoundIoError.SoundIoErrorNone ? null : Marshal.PtrToStringAnsi (Natives.soundio_strerror ((int) code));
+			}
+		}
+
 		// functions
 
 		public void Open ()
