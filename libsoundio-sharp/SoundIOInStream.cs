@@ -146,7 +146,7 @@ namespace LibSoundIOSharp
 				throw new SoundIOException (ret);
 		}
 
-		public SoundIOChannelArea [] BeginWrite (ref int frameCount)
+		public SoundIOChannelArea [] BeginRead (ref int frameCount)
 		{
 			IntPtr ptrs = default (IntPtr);
 			unsafe {
@@ -156,7 +156,7 @@ namespace LibSoundIOSharp
 					throw new SoundIOException (ret);
 				frameCount = *((int*) hptr);
 				var s = Marshal.PtrToStructure<SoundIoInStream> (handle);
-				var count = s.layout.channel_count;
+				var count = ChannelLayout.ChannelCount;
 				var results = new SoundIOChannelArea [count];
 				var arr = (IntPtr*) ptrs;
 				for (int i = 0; i < count; i++)
