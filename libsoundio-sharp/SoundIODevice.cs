@@ -52,13 +52,12 @@ namespace LibSoundIOSharp
 			get { return (SoundIOFormat) GetValue ().current_format; }
 		}
 
-
-		static readonly int current_layout_offset = (int) Marshal.OffsetOf<SoundIoDevice> ("current_layout");
 		public SoundIOChannelLayout CurrentLayout {
 			get {
 				return new SoundIOChannelLayout ((IntPtr) handle + current_layout_offset);
 			}
 		}
+		static readonly int current_layout_offset = (int)Marshal.OffsetOf<SoundIoDevice> ("current_layout");
 
 		public int FormatCount {
 			get { return GetValue ().format_count; }
@@ -78,7 +77,9 @@ namespace LibSoundIOSharp
 
 		public bool IsRaw {
 			get { return GetValue ().is_raw != 0; }
+			set { Marshal.WriteInt32 ((IntPtr) handle + is_raw_offset, value ? 1 : 0); }
 		}
+		static readonly int is_raw_offset = (int)Marshal.OffsetOf<SoundIoDevice> ("is_raw");
 
 		public int LayoutCount {
 			get { return GetValue ().layout_count; }
@@ -95,6 +96,7 @@ namespace LibSoundIOSharp
 		public string Name {
 			get { return Marshal.PtrToStringAnsi (GetValue ().name); }
 		}
+		static readonly int name_offset = (int)Marshal.OffsetOf<SoundIoDevice> ("name");
 
 		public int ProbeError {
 			get { return GetValue ().probe_error; }
@@ -150,6 +152,17 @@ namespace LibSoundIOSharp
 		{
 			Natives.soundio_device_sort_channel_layouts (handle);
 		}
+
+		public static readonly SoundIOFormat S16NE = BitConverter.IsLittleEndian ? SoundIOFormat.S16LE : SoundIOFormat.S16BE;
+		public static readonly SoundIOFormat U16NE = BitConverter.IsLittleEndian ? SoundIOFormat.U16LE : SoundIOFormat.U16BE;
+		public static readonly SoundIOFormat S24NE = BitConverter.IsLittleEndian ? SoundIOFormat.S24LE : SoundIOFormat.S24BE;
+		public static readonly SoundIOFormat U24NE = BitConverter.IsLittleEndian ? SoundIOFormat.U24LE : SoundIOFormat.U24BE;
+		public static readonly SoundIOFormat S32NE = BitConverter.IsLittleEndian ? SoundIOFormat.S32LE : SoundIOFormat.S32BE;
+		public static readonly SoundIOFormat U32NE = BitConverter.IsLittleEndian ? SoundIOFormat.U32LE : SoundIOFormat.U32BE;
+		public static readonly SoundIOFormat Float32NE = BitConverter.IsLittleEndian ? SoundIOFormat.Float32LE : SoundIOFormat.Float32BE;
+		public static readonly SoundIOFormat Float64NE = BitConverter.IsLittleEndian ? SoundIOFormat.Float64LE : SoundIOFormat.Float64BE;
+		public static readonly SoundIOFormat Float32FE = !BitConverter.IsLittleEndian ? SoundIOFormat.Float32LE : SoundIOFormat.Float32BE;
+		public static readonly SoundIOFormat Float64FE = !BitConverter.IsLittleEndian ? SoundIOFormat.Float64LE : SoundIOFormat.Float64BE;
 
 		public bool SupportsFormat (SoundIOFormat format)
 		{

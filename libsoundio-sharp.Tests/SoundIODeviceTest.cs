@@ -48,25 +48,5 @@ namespace LibSoundIOSharp.Tests
 				api.Dispose ();
 			}
 		}
-
-		[Test]
-		public void WithDefaultOutputDevice ()
-		{
-			var api = new SoundIO ();
-			api.Connect ();
-			try {
-				api.FlushEvents ();
-				var dev = api.GetOutputDevice (api.DefaultOutputDeviceIndex);
-				Assert.AreNotEqual (0, dev.GetNearestSampleRate (1), "nearest sample rate is 0...?");
-				using (var stream = dev.CreateOutStream ()) {
-					stream.Open ();
-					int frameCount = 1024;
-					//stream.BeginWrite (ref frameCount);
-					//stream.EndWrite ();
-				}
-			} finally {
-				api.Disconnect ();
-			}
-		}
 	}
 }

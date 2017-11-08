@@ -237,9 +237,9 @@ struct SoundIoOutStream // soundio.h (497, 8)
 	public double software_latency;
 	public float volume;
 	[CTypeDetails ("Pointer<void>")]public System.IntPtr userdata;
-	[CTypeDetails ("Pointer<void (SoundIoOutStream *, int, int)>")]public Delegates.delegate4 write_callback;
-	[CTypeDetails ("Pointer<void (SoundIoOutStream *)>")]public Delegates.delegate5 underflow_callback;
-	[CTypeDetails ("Pointer<void (SoundIoOutStream *, int)>")]public Delegates.delegate6 error_callback;
+		[CTypeDetails ("Pointer<void (SoundIoOutStream *, int, int)>")]public Delegates.delegate4 write_callback;
+		[CTypeDetails ("Pointer<void (SoundIoOutStream *)>")]public Delegates.delegate5 underflow_callback;
+		[CTypeDetails ("Pointer<void (SoundIoOutStream *, int)>")]public Delegates.delegate6 error_callback;
 	[CTypeDetails ("Pointer<char>")]public IntPtr name;
 	public int non_terminal_hint;
 	public int bytes_per_frame;

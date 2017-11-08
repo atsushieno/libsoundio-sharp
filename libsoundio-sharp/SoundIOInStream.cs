@@ -60,7 +60,7 @@ namespace LibSoundIOSharp
 		}
 
 		static readonly int layout_offset = (int) Marshal.OffsetOf<SoundIoInStream> ("layout");
-		public SoundIOChannelLayout ChannelLayout {
+		public SoundIOChannelLayout Layout {
 			get { return new SoundIOChannelLayout ((IntPtr) handle + layout_offset); }
 		}
 
@@ -156,7 +156,7 @@ namespace LibSoundIOSharp
 					throw new SoundIOException (ret);
 				frameCount = *((int*) hptr);
 				var s = Marshal.PtrToStructure<SoundIoInStream> (handle);
-				var count = ChannelLayout.ChannelCount;
+				var count = Layout.ChannelCount;
 				var results = new SoundIOChannelArea [count];
 				var arr = (IntPtr*) ptrs;
 				for (int i = 0; i < count; i++)

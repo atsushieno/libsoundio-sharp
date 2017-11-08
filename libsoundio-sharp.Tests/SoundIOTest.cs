@@ -55,7 +55,7 @@ namespace LibSoundIOSharp.Tests
 			var api = new SoundIO ();
 			string msg = null;
 			int err = -1;
-			api.OnBackendDisconnect = (sio, e) => {
+			api.OnBackendDisconnect = e => {
 				msg = "disconnected";
 				err = e;
 			};

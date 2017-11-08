@@ -118,40 +118,55 @@ namespace LibSoundIOSharp
 		Action<string> jack_info_callback;
 
 		// on_backend_disconnect
-		public Action<SoundIO,int> OnBackendDisconnect {
+		public Action<int> OnBackendDisconnect {
 			get { return on_backend_disconnect; }
 			set {
 				on_backend_disconnect = value;
-				var ptr = Marshal.GetFunctionPointerForDelegate (on_backend_disconnect);
+				if (value == null)
+					on_backend_disconnect_native = null;
+				else
+					on_backend_disconnect_native = (sio, err) => on_backend_disconnect (err);
+				var ptr = Marshal.GetFunctionPointerForDelegate (on_backend_disconnect_native);
 				Marshal.WriteIntPtr (handle, on_backend_disconnect_offset, ptr);
 			}
 		}
 		static readonly int on_backend_disconnect_offset = (int)Marshal.OffsetOf<SoundIo> ("on_backend_disconnect");
-		Action<SoundIO,int> on_backend_disconnect;
+		Action<int> on_backend_disconnect;
+		Action<IntPtr, int> on_backend_disconnect_native;
 
 		// on_devices_change
-		public Action<SoundIO> OnDevicesChange {
+		public Action OnDevicesChange {
 			get { return on_devices_change; }
 			set {
 				on_devices_change = value;
-				var ptr = Marshal.GetFunctionPointerForDelegate (on_devices_change);
+				if (value == null)
+					on_devices_change_native = null;
+				else
+					on_devices_change_native = sio => on_devices_change ();
+				var ptr = Marshal.GetFunctionPointerForDelegate (on_devices_change_native);
 				Marshal.WriteIntPtr (handle, on_devices_change_offset, ptr);
 			}
 		}
 		static readonly int on_devices_change_offset = (int)Marshal.OffsetOf<SoundIo> ("on_devices_change");
-		Action<SoundIO> on_devices_change;
+		Action on_devices_change;
+		Action<IntPtr> on_devices_change_native;
 
 		// on_events_signal
-		public Action<SoundIO> OnEventsSignal {
+		public Action OnEventsSignal {
 			get { return on_events_signal; }
 			set {
 				on_events_signal = value;
-				var ptr = Marshal.GetFunctionPointerForDelegate (on_events_signal);
+				if (value == null)
+					on_events_signal_native = null;
+				else
+					on_events_signal_native = sio => on_events_signal ();
+				var ptr = Marshal.GetFunctionPointerForDelegate (on_events_signal_native);
 				Marshal.WriteIntPtr (handle, on_events_signal_offset, ptr);
 			}
 		}
 		static readonly int on_events_signal_offset = (int)Marshal.OffsetOf<SoundIo> ("on_events_signal");
-		Action<SoundIO> on_events_signal;
+		Action on_events_signal;
+		Action<SoundIo> on_events_signal_native;
 
 
 		// functions

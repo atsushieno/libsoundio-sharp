@@ -52,14 +52,18 @@ namespace LibSoundIOSharp
 
 		public SoundIOFormat Format {
 			get { return (SoundIOFormat) GetValue ().format; }
+			set { Marshal.WriteInt32 ((IntPtr) handle + format_offset, (int) value); }
 		}
+		static readonly int format_offset = (int)Marshal.OffsetOf<SoundIoOutStream> ("format");
 
 		public int SampleRate {
 			get { return GetValue ().sample_rate; }
+			set { Marshal.WriteInt32 ((IntPtr) handle + sample_rate_offset, value); }
 		}
+		static readonly int sample_rate_offset = (int)Marshal.OffsetOf<SoundIoOutStream> ("sample_rate");
 
 		static readonly int layout_offset = (int) Marshal.OffsetOf<SoundIoOutStream> ("layout");
-		public SoundIOChannelLayout ChannelLayout {
+		public SoundIOChannelLayout Layout {
 			get { return new SoundIOChannelLayout ((IntPtr) handle + layout_offset); }
 		}
 
@@ -68,40 +72,55 @@ namespace LibSoundIOSharp
 		}
 
 		// error_callback
-		public Action<SoundIOInStream> ErrorCallback {
+		public Action ErrorCallback {
 			get { return error_callback; }
 			set {
 				error_callback = value;
-				var ptr = Marshal.GetFunctionPointerForDelegate (error_callback);
+				if (value == null)
+					error_callback_native = null;
+				else
+					error_callback_native = stream => error_callback ();
+				var ptr = Marshal.GetFunctionPointerForDelegate (error_callback_native);
 				Marshal.WriteIntPtr (handle, error_callback_offset, ptr);
 			}
 		}
 		static readonly int error_callback_offset = (int)Marshal.OffsetOf<SoundIoOutStream> ("error_callback");
-		Action<SoundIOInStream> error_callback;
+		Action error_callback;
+		Action<SoundIoOutStream> error_callback_native;
 
 		// write_callback
-		public Action<SoundIOInStream, int, int> WriteCallback {
+		public Action<int, int> WriteCallback {
 			get { return write_callback; }
 			set {
 				write_callback = value;
-				var ptr = Marshal.GetFunctionPointerForDelegate (write_callback);
+				if (value == null)
+					write_callback_native = null;
+				else
+					write_callback_native = (h, frame_count_min, frame_count_max) => write_callback (frame_count_min, frame_count_max);
+				var ptr = Marshal.GetFunctionPointerForDelegate (write_callback_native);
 				Marshal.WriteIntPtr (handle, write_callback_offset, ptr);
 			}
 		}
 		static readonly int write_callback_offset = (int)Marshal.OffsetOf<SoundIoOutStream> ("write_callback");
-		Action<SoundIOInStream, int, int> write_callback;
+		Action<int, int> write_callback;
+		Action<SoundIoOutStream, int, int> write_callback_native;
 
 		// underflow_callback
-		public Action<SoundIOInStream> UnderflowCallback {
+		public Action UnderflowCallback {
 			get { return underflow_callback; }
 			set {
 				underflow_callback = value;
-				var ptr = Marshal.GetFunctionPointerForDelegate (underflow_callback);
+				if (value == null)
+					underflow_callback_native = null;
+				else
+					underflow_callback_native = h => underflow_callback ();
+				var ptr = Marshal.GetFunctionPointerForDelegate (underflow_callback_native);
 				Marshal.WriteIntPtr (handle, underflow_callback_offset, ptr);
 			}
 		}
 		static readonly int underflow_callback_offset = (int)Marshal.OffsetOf<SoundIoOutStream> ("underflow_callback");
-		Action<SoundIOInStream> underflow_callback;
+		Action underflow_callback;
+		Action<SoundIoOutStream> underflow_callback_native;
 
 		public string Name {
 			get {
@@ -149,20 +168,22 @@ namespace LibSoundIOSharp
 		{
 			IntPtr ptrs = default (IntPtr);
 			unsafe {
-				var hptr = new IntPtr (frameCount);
-				var ret = (SoundIoError)Natives.soundio_outstream_begin_write (handle, ptrs, hptr);
+				var size = Marshal.SizeOf<SoundIoDevice> ();
+				var ret = (SoundIoError)soundio_outstream_begin_write (handle, out ptrs, ref frameCount);
 				if (ret != SoundIoError.SoundIoErrorNone)
 					throw new SoundIOException (ret);
-				frameCount = *((int*) hptr);
-				var s = Marshal.PtrToStructure<SoundIoOutStream> (handle);
-				var count = s.layout.channel_count;
+				var s = GetValue ();
+				var count = Layout.ChannelCount;
 				var results = new SoundIOChannelArea [count];
-				var arr = (IntPtr*) ptrs;
+				var arr = (IntPtr*)ptrs;
 				for (int i = 0; i < count; i++)
 					results [i] = new SoundIOChannelArea (arr [i]);
 				return results;
 			}
 		}
+
+		[DllImport ("soundio")]
+		internal static extern int soundio_outstream_begin_write ([CTypeDetails ("Pointer<SoundIoOutStream>")]IntPtr outstream, [CTypeDetails ("Pointer<IntPtr>")]out IntPtr areas, [CTypeDetails ("Pointer<int>")]ref int frame_count);
 
 		public void EndWrite ()
 		{

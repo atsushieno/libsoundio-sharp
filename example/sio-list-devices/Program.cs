@@ -42,7 +42,7 @@ namespace LibSoundIOSharp.Samples
 
 				api.FlushEvents ();
 				if (watch) {
-					api.OnDevicesChange = OnDeviceChange;
+					api.OnDevicesChange = () => OnDeviceChange (api);
 					Console.WriteLine ("Type [ENTER] to exit.");
 					Console.ReadLine ();
 				} else

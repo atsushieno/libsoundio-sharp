@@ -9,6 +9,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "example", "example", "{FE74
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sio-list-devices", "example\sio-list-devices\sio-list-devices.csproj", "{B263B65F-21A1-4318-83CE-0DC66C2D7209}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "sio-sine", "example\sio-sine\sio-sine.csproj", "{248A6554-6018-44AE-A40C-DA1740AAB9AA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,8 +29,13 @@ Global
 		{B263B65F-21A1-4318-83CE-0DC66C2D7209}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B263B65F-21A1-4318-83CE-0DC66C2D7209}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B263B65F-21A1-4318-83CE-0DC66C2D7209}.Release|Any CPU.Build.0 = Release|Any CPU
+		{248A6554-6018-44AE-A40C-DA1740AAB9AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{248A6554-6018-44AE-A40C-DA1740AAB9AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{248A6554-6018-44AE-A40C-DA1740AAB9AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{248A6554-6018-44AE-A40C-DA1740AAB9AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{B263B65F-21A1-4318-83CE-0DC66C2D7209} = {FE744C16-1D89-4040-8ED0-41653B27B6C8}
+		{248A6554-6018-44AE-A40C-DA1740AAB9AA} = {FE744C16-1D89-4040-8ED0-41653B27B6C8}
 	EndGlobalSection
 EndGlobal
