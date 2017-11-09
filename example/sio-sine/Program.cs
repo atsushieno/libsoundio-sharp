@@ -52,12 +52,11 @@ namespace LibSoundIOSharp.Example
 			var device = device_id == null ? api.GetOutputDevice (api.DefaultOutputDeviceIndex) :
 				   Enumerable.Range (0, api.OutputDeviceCount)
 				   .Select (i => api.GetOutputDevice (i))
-				   .FirstOrDefault (d => d.Id == device_id);
+				   .FirstOrDefault (d => d.Id == device_id && d.IsRaw == raw);
 			if (device == null) {
 				Console.Error.WriteLine ("Output device " + device_id + " not found.");
 				return 1;
 			}
-			device.IsRaw = raw;
 			Console.WriteLine ("output device: " + device.Name);
 			if (device.ProbeError != 0) {
 				Console.Error.WriteLine ("Cannot probe device " + device_id + ".");

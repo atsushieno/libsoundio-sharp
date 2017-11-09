@@ -19,9 +19,18 @@ namespace LibSoundIOSharp.Tests
 				using (var stream = dev.CreateOutStream ()) {
 					foreach (var p in typeof (SoundIOOutStream).GetProperties ()) {
 						try {
-							p.GetValue (stream);
+							switch (p.Name) {
+							case "Layout":
+								var cl = (SoundIOChannelLayout) p.GetValue (stream);
+								foreach (var pcl in typeof (SoundIOChannelLayout).GetProperties ())
+									Console.Error.WriteLine (pcl + " : " + pcl.GetValue (cl));
+								break;
+							default:
+								p.GetValue (stream);
+								break;
+							}
 						} catch (Exception ex) {
-							Assert.Fail ("Failed to get property " + p + " : " + ex);
+							Assert.Fail ("Failed to get property " + p + " : " + ex.InnerException);
 						}
 					}
 				}
@@ -42,15 +51,14 @@ namespace LibSoundIOSharp.Tests
 				Assert.AreNotEqual (0, dev.GetNearestSampleRate (1), "nearest sample rate is 0...?");
 				using (var stream = dev.CreateOutStream ()) {
 					stream.Open ();
-					int frameCount = 1024;
-					stream.BeginWrite (ref frameCount);
-					stream.EndWrite ();
+					stream.WriteCallback = (min, max) => {
+						int frameCount = max;
+						stream.BeginWrite (ref frameCount);
+					};
 					stream.Start ();
 					stream.Pause (true);
 					Thread.Sleep (50);
-					stream.Pause (false);
-					Thread.Sleep (50);
-					stream.Pause (true);
+					stream.EndWrite ();
 				}
 			} finally {
 				api.Disconnect ();

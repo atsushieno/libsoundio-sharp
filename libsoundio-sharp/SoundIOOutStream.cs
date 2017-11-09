@@ -182,21 +182,22 @@ namespace LibSoundIOSharp
 		public SoundIOChannelArea [] BeginWrite (ref int frameCount)
 		{
 			IntPtr ptrs = default (IntPtr);
+			int nativeFrameCount = frameCount;
 			unsafe {
-				var ret = (SoundIoError) soundio_outstream_begin_write (handle, out ptrs, ref frameCount);
+				var frameCountPtr = &nativeFrameCount;
+				var ptrptr = &ptrs;
+				var ret = (SoundIoError)Natives.soundio_outstream_begin_write (handle, (IntPtr) ptrptr, (IntPtr) frameCountPtr);
+				frameCount = *frameCountPtr;
 				if (ret != SoundIoError.SoundIoErrorNone)
 					throw new SoundIOException (ret);
 				var s = GetValue ();
 				var count = Layout.ChannelCount;
 				var results = new SoundIOChannelArea [count];
 				for (int i = 0; i < count; i++)
-					results [i] = new SoundIOChannelArea (ptrs + i);
+					results [i] = new SoundIOChannelArea (ptrs + sizeof (SoundIoChannelArea) * i);
 				return results;
 			}
 		}
-
-		[DllImport ("soundio")]
-		internal static extern int soundio_outstream_begin_write ([CTypeDetails ("Pointer<SoundIoOutStream>")]IntPtr outstream, [CTypeDetails ("Pointer<IntPtr>")]out IntPtr areas, [CTypeDetails ("Pointer<int>")]ref int frame_count);
 
 		public void EndWrite ()
 		{

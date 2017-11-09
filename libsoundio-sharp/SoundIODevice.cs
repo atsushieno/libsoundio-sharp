@@ -77,9 +77,7 @@ namespace LibSoundIOSharp
 
 		public bool IsRaw {
 			get { return GetValue ().is_raw != 0; }
-			set { Marshal.WriteInt32 ((IntPtr) handle + is_raw_offset, value ? 1 : 0); }
 		}
-		static readonly int is_raw_offset = (int)Marshal.OffsetOf<SoundIoDevice> ("is_raw");
 
 		public int LayoutCount {
 			get { return GetValue ().layout_count; }
