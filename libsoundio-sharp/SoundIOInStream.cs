@@ -69,40 +69,46 @@ namespace LibSoundIOSharp
 		}
 
 		// error_callback
-		public Action<SoundIOInStream> ErrorCallback {
+		public Action ErrorCallback {
 			get { return error_callback; }
 			set {
 				error_callback = value;
-				var ptr = Marshal.GetFunctionPointerForDelegate (error_callback);
+				error_callback_native = _ => error_callback ();
+				var ptr = Marshal.GetFunctionPointerForDelegate (error_callback_native);
 				Marshal.WriteIntPtr (handle, error_callback_offset, ptr);
 			}
 		}
 		static readonly int error_callback_offset = (int)Marshal.OffsetOf<SoundIoInStream> ("error_callback");
-		Action<SoundIOInStream> error_callback;
+		Action error_callback;
+		Action<IntPtr> error_callback_native;
 
 		// read_callback
-		public Action<SoundIOInStream,int,int> ReadCallback {
+		public Action<int,int> ReadCallback {
 			get { return read_callback; }
 			set {
 				read_callback = value;
-				var ptr = Marshal.GetFunctionPointerForDelegate (read_callback);
+				read_callback_native = (_, minFrameCount, maxFrameCount) => read_callback (minFrameCount, maxFrameCount);
+				var ptr = Marshal.GetFunctionPointerForDelegate (read_callback_native);
 				Marshal.WriteIntPtr (handle, read_callback_offset, ptr);
 			}
 		}
 		static readonly int read_callback_offset = (int)Marshal.OffsetOf<SoundIoInStream> ("read_callback");
-		Action<SoundIOInStream, int, int> read_callback;
+		Action<int, int> read_callback;
+		Action<IntPtr, int, int> read_callback_native;
 
 		// overflow_callback
-		public Action<SoundIOInStream> OverflowCallback {
+		public Action OverflowCallback {
 			get { return overflow_callback; }
 			set {
 				overflow_callback = value;
-				var ptr = Marshal.GetFunctionPointerForDelegate (overflow_callback);
+				overflow_callback_native = _ => overflow_callback ();
+				var ptr = Marshal.GetFunctionPointerForDelegate (overflow_callback_native);
 				Marshal.WriteIntPtr (handle, overflow_callback_offset, ptr);
 			}
 		}
 		static readonly int overflow_callback_offset = (int)Marshal.OffsetOf<SoundIoInStream> ("overflow_callback");
-		Action<SoundIOInStream> overflow_callback;
+		Action overflow_callback;
+		Action<IntPtr> overflow_callback_native;
 
 		public string Name {
 			get {

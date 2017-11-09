@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace LibSoundIOSharp
@@ -86,7 +87,7 @@ namespace LibSoundIOSharp
 		}
 		static readonly int error_callback_offset = (int)Marshal.OffsetOf<SoundIoOutStream> ("error_callback");
 		Action error_callback;
-		Action<SoundIoOutStream> error_callback_native;
+		Action<IntPtr> error_callback_native;
 
 		// write_callback
 		public Action<int, int> WriteCallback {
@@ -103,7 +104,7 @@ namespace LibSoundIOSharp
 		}
 		static readonly int write_callback_offset = (int)Marshal.OffsetOf<SoundIoOutStream> ("write_callback");
 		Action<int, int> write_callback;
-		Action<SoundIoOutStream, int, int> write_callback_native;
+		Action<IntPtr,int,int> write_callback_native;
 
 		// underflow_callback
 		public Action UnderflowCallback {
@@ -120,14 +121,28 @@ namespace LibSoundIOSharp
 		}
 		static readonly int underflow_callback_offset = (int)Marshal.OffsetOf<SoundIoOutStream> ("underflow_callback");
 		Action underflow_callback;
-		Action<SoundIoOutStream> underflow_callback_native;
+		Action<IntPtr> underflow_callback_native;
+
+		// FIXME: this should be taken care in more centralized/decent manner... we don't want to write
+		// this kind of code anywhere we need string marshaling.
+		List<IntPtr> allocated_hglobals = new List<IntPtr> ();
 
 		public string Name {
-			get {
-				var ptr = GetValue ().name;
-				return ptr == IntPtr.Zero ? null : Marshal.PtrToStringAuto (ptr); 
+			get { return Marshal.PtrToStringAnsi (GetValue ().name); }
+			set {
+				unsafe {
+					var existing = GetValue ().name;
+					if (allocated_hglobals.Contains (existing)) {
+						allocated_hglobals.Remove (existing);
+						Marshal.FreeHGlobal (existing);
+					}
+					var ptr = Marshal.StringToHGlobalAnsi (value);
+					Marshal.WriteIntPtr (handle, name_offset, ptr);
+					allocated_hglobals.Add (ptr);
+				}
 			}
 		}
+		static readonly int name_offset = (int)Marshal.OffsetOf<SoundIoOutStream> ("name");
 
 		public bool NonTerminalHint {
 			get { return GetValue ().non_terminal_hint != 0; }
@@ -168,16 +183,14 @@ namespace LibSoundIOSharp
 		{
 			IntPtr ptrs = default (IntPtr);
 			unsafe {
-				var size = Marshal.SizeOf<SoundIoDevice> ();
-				var ret = (SoundIoError)soundio_outstream_begin_write (handle, out ptrs, ref frameCount);
+				var ret = (SoundIoError) soundio_outstream_begin_write (handle, out ptrs, ref frameCount);
 				if (ret != SoundIoError.SoundIoErrorNone)
 					throw new SoundIOException (ret);
 				var s = GetValue ();
 				var count = Layout.ChannelCount;
 				var results = new SoundIOChannelArea [count];
-				var arr = (IntPtr*)ptrs;
 				for (int i = 0; i < count; i++)
-					results [i] = new SoundIOChannelArea (arr [i]);
+					results [i] = new SoundIOChannelArea (ptrs + i);
 				return results;
 			}
 		}

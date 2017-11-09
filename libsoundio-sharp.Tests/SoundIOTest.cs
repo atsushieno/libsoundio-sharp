@@ -48,7 +48,7 @@ namespace LibSoundIOSharp.Tests
 			api.Dispose ();
 		}
 
-		[Ignore ("this does not seem to be the way how this event is used.")]
+		[Ignore ("this does not seem to be the way how this event is used. It is raised when soem device caused fatal errors. I cannot really unit test that.")]
 		[Test]
 		public void OnBackendDisconnect ()
 		{

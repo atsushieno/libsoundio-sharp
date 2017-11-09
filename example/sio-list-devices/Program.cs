@@ -20,7 +20,7 @@ namespace LibSoundIOSharp.Samples
 					continue;
 				default:
 					if (arg.StartsWith ("--backend:")) {
-						backend = arg.Substring (arg.IndexOf (':'));
+						backend = arg.Substring (arg.IndexOf (':') + 1);
 						continue;
 					}
 					break;

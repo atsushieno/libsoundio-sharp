@@ -25,15 +25,15 @@ namespace LibSoundIOSharp.Example
 					continue;
 				default:
 					if (arg.StartsWith ("--backend:"))
-						backend_name = arg.Substring (arg.IndexOf (':'));
+						backend_name = arg.Substring (arg.IndexOf (':') + 1);
 					else if (arg.StartsWith ("--device:"))
-						device_id = arg.Substring (arg.IndexOf (':'));
+						device_id = arg.Substring (arg.IndexOf (':') + 1);
 					else if (arg.StartsWith ("--name:"))
-						stream_name = arg.Substring (arg.IndexOf (':'));
+						stream_name = arg.Substring (arg.IndexOf (':') + 1);
 					else if (arg.StartsWith ("--latency:"))
-						latency = double.Parse (arg.Substring (arg.IndexOf (':')));
+						latency = double.Parse (arg.Substring (arg.IndexOf (':') + 1));
 					else if (arg.StartsWith ("--sample_rate:"))
-						sample_rate = int.Parse (arg.Substring (arg.IndexOf (':')));
+						sample_rate = int.Parse (arg.Substring (arg.IndexOf (':') + 1));
 					continue;
 				}
 			}
@@ -49,7 +49,6 @@ namespace LibSoundIOSharp.Example
 
 			api.FlushEvents ();
 
-			int selected_device_index = -1;
 			var device = device_id == null ? api.GetOutputDevice (api.DefaultOutputDeviceIndex) :
 				   Enumerable.Range (0, api.OutputDeviceCount)
 				   .Select (i => api.GetOutputDevice (i))
@@ -65,14 +64,16 @@ namespace LibSoundIOSharp.Example
 				return 1;
 			}
 
-
 			var outstream = device.CreateOutStream ();
 
 			outstream.WriteCallback = (min,max) => write_callback (outstream, min, max);
 			outstream.UnderflowCallback = () => underflow_callback (outstream);
-			//outstream.Name = stream_name;
+			if (stream_name != null)
+				outstream.Name = stream_name;
 			//outstream.SoftwareLatency = latency;
-			outstream.SampleRate = sample_rate;
+			if (sample_rate != 0)
+				outstream.SampleRate = sample_rate;
+			
 			if (device.SupportsFormat (SoundIODevice.Float32NE)) {
 				outstream.Format = SoundIODevice.Float32NE;
 				write_sample = write_sample_float32ne;
@@ -103,6 +104,7 @@ namespace LibSoundIOSharp.Example
 
 			if (outstream.LayoutErrorMessage != null)
 				Console.Error.WriteLine ("Unable to set channel layout: " + outstream.LayoutErrorMessage);
+			
 			outstream.Start ();
 
 			for (; ; ) {
