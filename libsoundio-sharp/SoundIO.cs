@@ -98,24 +98,36 @@ namespace LibSoundIOSharp
 			get { return jack_error_callback; }
 			set {
 				jack_error_callback = value;
-				var ptr = Marshal.GetFunctionPointerForDelegate (jack_error_callback);
+				if (value == null)
+					jack_error_callback = null;
+				else
+					jack_error_callback_native = msg => jack_error_callback (msg);
+				var ptr = Marshal.GetFunctionPointerForDelegate (jack_error_callback_native);
 				Marshal.WriteIntPtr (handle, jack_error_callback_offset, ptr);
 			}
 		}
 		static readonly int jack_error_callback_offset = (int)Marshal.OffsetOf<SoundIo> ("jack_error_callback");
 		Action<string> jack_error_callback;
+		delegate void jack_error_delegate (string message);
+		jack_error_delegate jack_error_callback_native;
 
 		// jack_info_callback
 		public Action<string> JackInfoCallback {
 			get { return jack_info_callback; }
 			set {
 				jack_info_callback = value;
-				var ptr = Marshal.GetFunctionPointerForDelegate (jack_info_callback);
+				if (value == null)
+					jack_info_callback = null;
+				else
+					jack_info_callback_native = msg => jack_info_callback (msg);
+				var ptr = Marshal.GetFunctionPointerForDelegate (jack_info_callback_native);
 				Marshal.WriteIntPtr (handle, jack_info_callback_offset, ptr);
 			}
 		}
 		static readonly int jack_info_callback_offset = (int)Marshal.OffsetOf<SoundIo> ("jack_info_callback");
 		Action<string> jack_info_callback;
+		delegate void jack_info_delegate (string message);
+		jack_info_delegate jack_info_callback_native;
 
 		// on_backend_disconnect
 		public Action<int> OnBackendDisconnect {
@@ -132,7 +144,8 @@ namespace LibSoundIOSharp
 		}
 		static readonly int on_backend_disconnect_offset = (int)Marshal.OffsetOf<SoundIo> ("on_backend_disconnect");
 		Action<int> on_backend_disconnect;
-		Action<IntPtr, int> on_backend_disconnect_native;
+		delegate void on_backend_disconnect_delegate (IntPtr handle, int errorCode);
+		on_backend_disconnect_delegate on_backend_disconnect_native;
 
 		// on_devices_change
 		public Action OnDevicesChange {
@@ -149,7 +162,8 @@ namespace LibSoundIOSharp
 		}
 		static readonly int on_devices_change_offset = (int)Marshal.OffsetOf<SoundIo> ("on_devices_change");
 		Action on_devices_change;
-		Action<IntPtr> on_devices_change_native;
+		delegate void on_devices_change_delegate (IntPtr handle);
+		on_devices_change_delegate on_devices_change_native;
 
 		// on_events_signal
 		public Action OnEventsSignal {
@@ -166,7 +180,8 @@ namespace LibSoundIOSharp
 		}
 		static readonly int on_events_signal_offset = (int)Marshal.OffsetOf<SoundIo> ("on_events_signal");
 		Action on_events_signal;
-		Action<SoundIo> on_events_signal_native;
+		delegate void on_events_signal_delegate (IntPtr handle);
+		on_events_signal_delegate on_events_signal_native;
 
 
 		// functions

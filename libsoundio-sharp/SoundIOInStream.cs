@@ -80,7 +80,8 @@ namespace LibSoundIOSharp
 		}
 		static readonly int error_callback_offset = (int)Marshal.OffsetOf<SoundIoInStream> ("error_callback");
 		Action error_callback;
-		Action<IntPtr> error_callback_native;
+		delegate void error_callback_delegate (IntPtr handle);
+		error_callback_delegate error_callback_native;
 
 		// read_callback
 		public Action<int,int> ReadCallback {
@@ -94,7 +95,8 @@ namespace LibSoundIOSharp
 		}
 		static readonly int read_callback_offset = (int)Marshal.OffsetOf<SoundIoInStream> ("read_callback");
 		Action<int, int> read_callback;
-		Action<IntPtr, int, int> read_callback_native;
+		delegate void read_callback_delegate (IntPtr handle, int min, int max);
+		read_callback_delegate read_callback_native;
 
 		// overflow_callback
 		public Action OverflowCallback {
@@ -108,7 +110,8 @@ namespace LibSoundIOSharp
 		}
 		static readonly int overflow_callback_offset = (int)Marshal.OffsetOf<SoundIoInStream> ("overflow_callback");
 		Action overflow_callback;
-		Action<IntPtr> overflow_callback_native;
+		delegate void overflow_callback_delegate (IntPtr handle);
+		overflow_callback_delegate overflow_callback_native;
 
 		public string Name {
 			get {

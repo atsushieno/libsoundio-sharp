@@ -87,7 +87,8 @@ namespace LibSoundIOSharp
 		}
 		static readonly int error_callback_offset = (int)Marshal.OffsetOf<SoundIoOutStream> ("error_callback");
 		Action error_callback;
-		Action<IntPtr> error_callback_native;
+		delegate void error_callback_delegate (IntPtr handle);
+		error_callback_delegate error_callback_native;
 
 		// write_callback
 		public Action<int, int> WriteCallback {
@@ -104,7 +105,8 @@ namespace LibSoundIOSharp
 		}
 		static readonly int write_callback_offset = (int)Marshal.OffsetOf<SoundIoOutStream> ("write_callback");
 		Action<int, int> write_callback;
-		Action<IntPtr,int,int> write_callback_native;
+		delegate void write_callback_delegate (IntPtr handle, int min, int max);
+		write_callback_delegate write_callback_native;
 
 		// underflow_callback
 		public Action UnderflowCallback {
@@ -121,7 +123,8 @@ namespace LibSoundIOSharp
 		}
 		static readonly int underflow_callback_offset = (int)Marshal.OffsetOf<SoundIoOutStream> ("underflow_callback");
 		Action underflow_callback;
-		Action<IntPtr> underflow_callback_native;
+		delegate void underflow_callback_delegate (IntPtr handle);
+		underflow_callback_delegate underflow_callback_native;
 
 		// FIXME: this should be taken care in more centralized/decent manner... we don't want to write
 		// this kind of code anywhere we need string marshaling.
