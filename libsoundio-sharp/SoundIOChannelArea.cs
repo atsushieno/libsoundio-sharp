@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace LibSoundIOSharp
 {
-	public class SoundIOChannelArea
+	public struct SoundIOChannelArea
 	{
 		internal SoundIOChannelArea (Pointer<SoundIoChannelArea> handle)
 		{

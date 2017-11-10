@@ -21,11 +21,12 @@ namespace LibSoundIOSharp.Tests
 				foreach (var c in l.Channels.Skip (l.ChannelCount))
 					Assert.AreEqual (SoundIOChannelId.Invalid, c, $"After l.ChannelCount = {l.ChannelCount}, Channel ID should be invalid");
 			}
-			Assert.IsNull (SoundIOChannelLayout.GetDefault (0), "soundio returned non-null layout for zero-channels??");
+			Assert.IsFalse (SoundIOChannelLayout.GetDefault (0).Channels.Any (), "soundio returned non-null layout for zero-channels??");
 			for (int channels = 1; channels < 10; channels++) {
 				var l = SoundIOChannelLayout.GetDefault (channels);
-				if (l != null) // some channels would give null e.g. there is no 9ch audio...
-					Assert.IsNotNull (l.DetectBuiltInName (), $"channel layout for {channels} has no builtin name...");
+				if (l.IsNull) // some channel count (e.g. 9) has no applicable default device. It depends on the default device.
+					continue;
+				Assert.IsNotNull (l.DetectBuiltInName (), $"channel layout for {channels} has no builtin name...");
 			}
 		}
 	}
