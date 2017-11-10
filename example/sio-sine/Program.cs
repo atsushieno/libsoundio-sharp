@@ -139,14 +139,13 @@ namespace LibSoundIOSharp.Example
 		{
 			double float_sample_rate = outstream.SampleRate;
 			double seconds_per_frame = 1.0 / float_sample_rate;
-			SoundIOChannelArea [] areas;
 
 			int frames_left = frame_count_max;
 			int frame_count = 0;
 
 			for (; ; ) {
 				frame_count = frames_left;
-				areas = outstream.BeginWrite (ref frame_count);
+				var results = outstream.BeginWrite (ref frame_count);
 
 				if (frame_count == 0)
 					break;
@@ -159,8 +158,9 @@ namespace LibSoundIOSharp.Example
 					double sample = Math.Sin ((seconds_offset + frame * seconds_per_frame) * radians_per_second);
 					for (int channel = 0; channel < layout.ChannelCount; channel += 1) {
 
-						write_sample (areas [channel].Pointer, sample);
-						areas [channel].Pointer += areas [channel].Step;
+						var area = results.GetArea (channel);
+						write_sample (area.Pointer, sample);
+						area.Pointer += area.Step;
 					}
 				}
 				seconds_offset = Math.IEEERemainder (seconds_offset + seconds_per_frame * frame_count, 1.0);

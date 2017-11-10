@@ -179,7 +179,31 @@ namespace LibSoundIOSharp
 				throw new SoundIOException (ret);
 		}
 
-		public SoundIOChannelArea [] BeginWrite (ref int frameCount)
+		public struct WriteResults
+		{
+			static readonly int native_size = Marshal.SizeOf<SoundIoChannelArea> ();
+
+			internal WriteResults (IntPtr head, int channelCount, int frameCount)
+			{
+				this.head = head;
+				this.channel_count = channelCount;
+				this.frame_count = frameCount;
+			}
+
+			IntPtr head;
+			int channel_count;
+			int frame_count;
+
+			public SoundIOChannelArea GetArea (int channel)
+			{
+				return new SoundIOChannelArea (head + native_size * channel);
+			}
+
+			public int ChannelCount => channel_count;
+			public int FrameCount => frame_count;
+		}
+
+		public WriteResults BeginWrite (ref int frameCount)
 		{
 			IntPtr ptrs = default (IntPtr);
 			int nativeFrameCount = frameCount;
@@ -190,12 +214,7 @@ namespace LibSoundIOSharp
 				frameCount = *frameCountPtr;
 				if (ret != SoundIoError.SoundIoErrorNone)
 					throw new SoundIOException (ret);
-				var s = GetValue ();
-				var count = Layout.ChannelCount;
-				var results = new SoundIOChannelArea [count];
-				for (int i = 0; i < count; i++)
-					results [i] = new SoundIOChannelArea (ptrs + sizeof (SoundIoChannelArea) * i);
-				return results;
+				return new WriteResults (ptrs, Layout.ChannelCount, frameCount);
 			}
 		}
 
