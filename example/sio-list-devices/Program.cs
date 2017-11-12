@@ -8,15 +8,11 @@ namespace LibSoundIOSharp.Example
 		public static int Main (string [] args)
 		{
 			bool watch = false;
-			bool short_output = false;
 			string backend = null;
 			foreach (var arg in args) {
 				switch (arg) {
 				case "--watch":
 					watch = true;
-					continue;
-				case "--short":
-					short_output = true;
 					continue;
 				default:
 					if (arg.StartsWith ("--backend:")) {
@@ -31,7 +27,7 @@ namespace LibSoundIOSharp.Example
 
 			using (var api = new SoundIO ()) {
 				SoundIOBackend be = SoundIOBackend.None;
-				if (Enum.TryParse<SoundIOBackend> (backend, out be)) {
+				if (Enum.TryParse (backend, out be)) {
 					ShowUsageToExit ();
 					return 1;
 				}
@@ -79,7 +75,6 @@ namespace LibSoundIOSharp.Example
 		{
 			Console.Error.WriteLine (@"Arguments:
 --watch		watch devices.
---short		short output.
 --backend:xxx	specify backend to use.
 
 libsoundio version: {0}

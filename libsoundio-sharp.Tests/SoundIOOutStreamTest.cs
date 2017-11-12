@@ -41,6 +41,25 @@ namespace LibSoundIOSharp.Tests
 		}
 
 		[Test]
+		public void SoftwareLatencyOffset ()
+		{
+			var api = new SoundIO ();
+			api.Connect ();
+			try {
+				api.FlushEvents ();
+				var dev = api.GetOutputDevice (api.DefaultOutputDeviceIndex);
+				Assert.AreNotEqual (0, dev.GetNearestSampleRate (1), "nearest sample rate is 0...?");
+				using (var stream = dev.CreateOutStream ()) {
+					Assert.AreEqual (0, stream.SoftwareLatency, "existing non-zero latency...?");
+					stream.SoftwareLatency = 0.5;
+					Assert.AreEqual (0.5, stream.SoftwareLatency, "wrong software latency");
+				}
+			} finally {
+				api.Disconnect ();
+			}
+		}
+
+		[Test]
 		public void WithDefaultOutputDevice ()
 		{
 			var api = new SoundIO ();

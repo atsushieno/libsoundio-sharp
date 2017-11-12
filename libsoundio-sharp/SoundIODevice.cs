@@ -45,12 +45,6 @@ namespace LibSoundIOSharp
 
 		// fields
 
-		SoundIoDevice GetValue ()
-		{
-			return Marshal.PtrToStructure<SoundIoDevice> (handle);
-
-		}
-
 		public SoundIODeviceAim Aim {
 			get { return (SoundIODeviceAim) Marshal.ReadInt32 (handle, aim_offset); }
 		}
@@ -137,16 +131,22 @@ namespace LibSoundIOSharp
 		static readonly int sample_rates_offset = (int)Marshal.OffsetOf<SoundIoDevice> ("sample_rates");
 
 		public double SoftwareLatencyCurrent {
-			get { return GetValue ().software_latency_current; }
+			get { return MarshalEx.ReadDouble (handle, software_latency_current_offset); }
+			set { MarshalEx.WriteDouble (handle, software_latency_current_offset, value); }
 		}
+		static readonly int software_latency_current_offset = (int)Marshal.OffsetOf<SoundIoDevice> ("software_latency_current");
 
 		public double SoftwareLatencyMin {
-			get { return GetValue ().software_latency_min; }
+			get { return MarshalEx.ReadDouble (handle, software_latency_min_offset); }
+			set { MarshalEx.WriteDouble (handle, software_latency_min_offset, value); }
 		}
+		static readonly int software_latency_min_offset = (int)Marshal.OffsetOf<SoundIoDevice> ("software_latency_min");
 
 		public double SoftwareLatencyMax {
-			get { return GetValue ().software_latency_max; }
+			get { return MarshalEx.ReadDouble (handle, software_latency_max_offset); }
+			set { MarshalEx.WriteDouble (handle, software_latency_max_offset, value); }
 		}
+		static readonly int software_latency_max_offset = (int)Marshal.OffsetOf<SoundIoDevice> ("software_latency_max");
 
 		public SoundIO SoundIO {
 			get { return new SoundIO (Marshal.ReadIntPtr (handle, soundio_offset)); }

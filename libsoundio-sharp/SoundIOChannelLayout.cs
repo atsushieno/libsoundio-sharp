@@ -49,13 +49,6 @@ namespace LibSoundIOSharp
 			get { return handle; }
 		}
 
-		/*
-		internal SoundIoChannelLayout GetValue ()
-		{
-			return Marshal.PtrToStructure<SoundIoChannelLayout> (handle);
-		}
-		*/
-
 		public int ChannelCount {
 			get { return IsNull ? 0 : Marshal.ReadInt32 ((IntPtr) handle + channel_count_offset); }
 		}

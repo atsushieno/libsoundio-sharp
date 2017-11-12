@@ -50,20 +50,15 @@ namespace LibSoundIOSharp
 
 		// fields
 
-		SoundIo GetValue ()
-		{
-			return Marshal.PtrToStructure<SoundIo> (handle);
-		}
-
 		// FIXME: this should be taken care in more centralized/decent manner... we don't want to write
 		// this kind of code anywhere we need string marshaling.
 		List<IntPtr> allocated_hglobals = new List<IntPtr> ();
 
 		public string ApplicationName {
-			get { return Marshal.PtrToStringAnsi (GetValue ().app_name); }
+			get { return Marshal.PtrToStringAnsi (Marshal.ReadIntPtr (handle, app_name_offset)); }
 			set {
 				unsafe {
-					var existing = GetValue ().app_name;
+					var existing = Marshal.ReadIntPtr (handle, app_name_offset);
 					if (allocated_hglobals.Contains (existing)) {
 						allocated_hglobals.Remove (existing);
 						Marshal.FreeHGlobal (existing);
@@ -77,9 +72,9 @@ namespace LibSoundIOSharp
 		static readonly int app_name_offset = (int)Marshal.OffsetOf<SoundIo> ("app_name");
 
 		public SoundIOBackend CurrentBackend {
-			// read only.
-			get { return (SoundIOBackend) GetValue ().current_backend; }
+			get { return (SoundIOBackend) Marshal.ReadInt32 (handle, current_backend_offset); }
 		}
+		static readonly int current_backend_offset = (int)Marshal.OffsetOf<SoundIo> ("current_backend");
 
 		// emit_rtprio_warning
 		public Action EmitRealtimePriorityWarning {

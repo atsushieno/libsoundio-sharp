@@ -69,7 +69,7 @@ namespace LibSoundIOSharp.Example
 			outstream.UnderflowCallback = () => underflow_callback (outstream);
 			if (stream_name != null)
 				outstream.Name = stream_name;
-			//outstream.SoftwareLatency = latency;
+			outstream.SoftwareLatency = latency;
 			if (sample_rate != 0)
 				outstream.SampleRate = sample_rate;
 			

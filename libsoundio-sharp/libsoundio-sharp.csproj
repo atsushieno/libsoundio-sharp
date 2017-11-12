@@ -48,6 +48,7 @@
     <Compile Include="SoundIODeviceAim.cs" />
     <Compile Include="SoundIOSampleRateRange.cs" />
     <Compile Include="SoundIOChannelAreas.cs" />
+    <Compile Include="MarshalExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\external\libsoundio\libsoundio.so">

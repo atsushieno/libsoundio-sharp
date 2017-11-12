@@ -43,11 +43,6 @@ namespace LibSoundIOSharp
 
 		// fields
 
-		SoundIoInStream GetValue ()
-		{
-			return Marshal.PtrToStructure<SoundIoInStream> (handle);
-		}
-
 		public SoundIODevice Device {
 			get { return new SoundIODevice (Marshal.ReadIntPtr (handle, device_offset)); }
 		}
@@ -76,9 +71,12 @@ namespace LibSoundIOSharp
 		}
 		static readonly int layout_offset = (int)Marshal.OffsetOf<SoundIoInStream> ("layout");
 
+
 		public double SoftwareLatency {
-			get { return GetValue ().software_latency; }
+			get { return MarshalEx.ReadDouble (handle, software_latency_offset); }
+			set { MarshalEx.WriteDouble (handle, software_latency_offset, value); }
 		}
+		static readonly int software_latency_offset = (int)Marshal.OffsetOf<SoundIoInStream> ("software_latency");
 
 		// error_callback
 		public Action ErrorCallback {

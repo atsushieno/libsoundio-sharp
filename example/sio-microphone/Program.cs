@@ -8,10 +8,6 @@ namespace LibSoundIOSharp.Example
 {
 	class Microphone
 	{
-		static Action<IntPtr, double> write_sample;
-		static double seconds_offset = 0.0;
-		static volatile bool want_pause = false;
-
 		static SoundIORingBuffer ring_buffer = null;
 
 		static SoundIOFormat [] prioritized_formats = {
@@ -130,9 +126,8 @@ namespace LibSoundIOSharp.Example
 			var instream = in_device.CreateInStream ();
 			instream.Format = fmt;
 			instream.SampleRate = sample_rate;
-			// FIXME: Layout needs to become settable.
 			instream.Layout = layout;
-			//instream.SoftwareLatency = microphone_latency;
+			instream.SoftwareLatency = microphone_latency;
 			instream.ReadCallback = (fmin, fmax) => read_callback (instream, fmin, fmax);
 
 			instream.Open ();
@@ -140,9 +135,8 @@ namespace LibSoundIOSharp.Example
 			var outstream = out_device.CreateOutStream ();
 			outstream.Format = fmt;
 			outstream.SampleRate = sample_rate;
-			// FIXME: Layout needs to become settable.
 			outstream.Layout = layout;
-			//outstream.SoftwareLatency = microphone_latency;
+			outstream.SoftwareLatency = microphone_latency;
 			outstream.WriteCallback = (fmin, fmax) => write_callback (outstream, fmin, fmax);
 			outstream.UnderflowCallback = () => underflow_callback (outstream);
 
