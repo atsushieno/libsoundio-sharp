@@ -24,19 +24,28 @@ namespace LibSoundIOSharp
 			Natives.soundio_ring_buffer_destroy (handle);
 		}
 
-		public int FillCount ()
-		{
-			return Natives.soundio_ring_buffer_fill_count (handle);
+		public int FillCount {
+			get {
+				return Natives.soundio_ring_buffer_fill_count (handle);
+			}
 		}
 
-		public IntPtr GetReadPointer ()
-		{
-			return Natives.soundio_ring_buffer_read_ptr (handle);
+		public int FreeCount {
+			get {
+				return Natives.soundio_ring_buffer_free_count (handle);
+			}
 		}
 
-		public IntPtr GetWritePointer ()
-		{
-			return Natives.soundio_ring_buffer_write_ptr (handle);
+		public IntPtr ReadPointer {
+			get {
+				return Natives.soundio_ring_buffer_read_ptr (handle);
+			}
+		}
+
+		public IntPtr WritePointer {
+			get {
+				return Natives.soundio_ring_buffer_write_ptr (handle);
+			}
 		}
 
 		public void AdvanceReadPointer (int count)

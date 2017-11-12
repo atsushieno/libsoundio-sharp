@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
 namespace LibSoundIOSharp
@@ -48,21 +49,32 @@ namespace LibSoundIOSharp
 		}
 
 		public SoundIODevice Device {
-			get { return new SoundIODevice (GetValue ().device); }
+			get { return new SoundIODevice (Marshal.ReadIntPtr (handle, device_offset)); }
 		}
+		static readonly int device_offset = (int)Marshal.OffsetOf<SoundIoInStream> ("device");
 
 		public SoundIOFormat Format {
-			get { return (SoundIOFormat) GetValue ().format; }
+			get { return (SoundIOFormat) Marshal.ReadInt32 (handle, format_offset); }
+			set { Marshal.WriteInt32 (handle, format_offset, (int) value); }
 		}
+		static readonly int format_offset = (int)Marshal.OffsetOf<SoundIoInStream> ("format");
 
 		public int SampleRate {
-			get { return GetValue ().sample_rate; }
+			get { return Marshal.ReadInt32 (handle, sample_rate_offset); }
+			set { Marshal.WriteInt32 (handle, sample_rate_offset, value); }
 		}
+		static readonly int sample_rate_offset = (int)Marshal.OffsetOf<SoundIoInStream> ("sample_rate");
 
-		static readonly int layout_offset = (int) Marshal.OffsetOf<SoundIoInStream> ("layout");
 		public SoundIOChannelLayout Layout {
 			get { return new SoundIOChannelLayout ((IntPtr) handle + layout_offset); }
+			set {
+				unsafe {
+					Buffer.MemoryCopy ((void*) ((IntPtr) handle + layout_offset), (void*)value.Handle,
+							   Marshal.SizeOf<SoundIoChannelLayout> (), Marshal.SizeOf<SoundIoChannelLayout> ());
+				}
+			}
 		}
+		static readonly int layout_offset = (int)Marshal.OffsetOf<SoundIoInStream> ("layout");
 
 		public double SoftwareLatency {
 			get { return GetValue ().software_latency; }
@@ -113,31 +125,49 @@ namespace LibSoundIOSharp
 		delegate void overflow_callback_delegate (IntPtr handle);
 		overflow_callback_delegate overflow_callback_native;
 
+		// FIXME: this should be taken care in more centralized/decent manner... we don't want to write
+		// this kind of code anywhere we need string marshaling.
+		List<IntPtr> allocated_hglobals = new List<IntPtr> ();
+
 		public string Name {
-			get {
-				var ptr = GetValue ().name;
-				return ptr == IntPtr.Zero ? null : Marshal.PtrToStringAnsi (ptr);
+			get { return Marshal.PtrToStringAnsi (Marshal.ReadIntPtr (handle, name_offset)); }
+			set {
+				unsafe {
+					var existing = Marshal.ReadIntPtr (handle, name_offset);
+					if (allocated_hglobals.Contains (existing)) {
+						allocated_hglobals.Remove (existing);
+						Marshal.FreeHGlobal (existing);
+					}
+					var ptr = Marshal.StringToHGlobalAnsi (value);
+					Marshal.WriteIntPtr (handle, name_offset, ptr);
+					allocated_hglobals.Add (ptr);
+				}
 			}
 		}
+		static readonly int name_offset = (int)Marshal.OffsetOf<SoundIoInStream> ("name");
 
 		public bool NonTerminalHint {
-			get { return GetValue ().non_terminal_hint != 0; }
+			get { return Marshal.ReadInt32 (handle, non_terminal_hint_offset) != 0; }
 		}
+		static readonly int non_terminal_hint_offset = (int)Marshal.OffsetOf<SoundIoInStream> ("non_terminal_hint");
 
 		public int BytesPerFrame {
-			get { return GetValue ().bytes_per_frame; }
+			get { return Marshal.ReadInt32 (handle, bytes_per_frame_offset); }
 		}
+		static readonly int bytes_per_frame_offset = (int)Marshal.OffsetOf<SoundIoInStream> ("bytes_per_frame");
 
 		public int BytesPerSample {
-			get { return GetValue ().bytes_per_sample; }
+			get { return Marshal.ReadInt32 (handle, bytes_per_sample_offset); }
 		}
+		static readonly int bytes_per_sample_offset = (int)Marshal.OffsetOf<SoundIoInStream> ("bytes_per_sample");
 
 		public string LayoutErrorMessage {
 			get {
-				var code = (SoundIoError) GetValue ().layout_error;
+				var code = (SoundIoError) Marshal.ReadInt32 (handle, layout_error_offset);
 				return code == SoundIoError.SoundIoErrorNone ? null : Marshal.PtrToStringAnsi (Natives.soundio_strerror ((int) code));
 			}
 		}
+		static readonly int layout_error_offset = (int)Marshal.OffsetOf<SoundIoInStream> ("layout_error");
 
 		// functions
 
@@ -155,26 +185,22 @@ namespace LibSoundIOSharp
 				throw new SoundIOException (ret);
 		}
 
-		public SoundIOChannelArea [] BeginRead (ref int frameCount)
+		public SoundIOChannelAreas BeginRead (ref int frameCount)
 		{
 			IntPtr ptrs = default (IntPtr);
+			int nativeFrameCount = frameCount;
 			unsafe {
-				var hptr = new IntPtr (frameCount);
-				var ret = (SoundIoError)Natives.soundio_instream_begin_read (handle, ptrs, hptr);
+				var frameCountPtr = &nativeFrameCount;
+				var ptrptr = &ptrs;
+				var ret = (SoundIoError) Natives.soundio_instream_begin_read (handle, (IntPtr)ptrptr, (IntPtr)frameCountPtr);
+				frameCount = *frameCountPtr;
 				if (ret != SoundIoError.SoundIoErrorNone)
 					throw new SoundIOException (ret);
-				frameCount = *((int*) hptr);
-				var s = Marshal.PtrToStructure<SoundIoInStream> (handle);
-				var count = Layout.ChannelCount;
-				var results = new SoundIOChannelArea [count];
-				var arr = (IntPtr*) ptrs;
-				for (int i = 0; i < count; i++)
-					results [i] = new SoundIOChannelArea (arr [i]);
-				return results;
+				return new SoundIOChannelAreas (ptrs, Layout.ChannelCount, frameCount);
 			}
 		}
 
-		public void EndWrite ()
+		public void EndRead ()
 		{
 			var ret = (SoundIoError) Natives.soundio_instream_end_read (handle);
 			if (ret != SoundIoError.SoundIoErrorNone)

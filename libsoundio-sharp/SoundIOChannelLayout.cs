@@ -32,8 +32,6 @@ namespace LibSoundIOSharp
 			}
 		}
 
-		// TODO: bind soundio_best_matching_channel_layout().
-
 		// instance members
 
 		internal SoundIOChannelLayout (Pointer<SoundIoChannelLayout> handle)
@@ -45,6 +43,10 @@ namespace LibSoundIOSharp
 
 		public bool IsNull {
 			get { return handle.Handle == IntPtr.Zero;  }
+		}
+
+		internal IntPtr Handle {
+			get { return handle; }
 		}
 
 		/*
