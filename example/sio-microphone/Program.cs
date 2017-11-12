@@ -85,7 +85,7 @@ namespace LibSoundIOSharp.Example
 				.Select (i => api.GetInputDevice (i))
 				.FirstOrDefault (d => d.Id == in_device_id && d.IsRaw == in_raw);
 			if (in_device == null) {
-				Console.Error.WriteLine ("Output device " + in_device_id + " not found.");
+				Console.Error.WriteLine ("Input device " + in_device_id + " not found.");
 				return 1;
 			}
 			Console.WriteLine ("input device: " + in_device.Name);
