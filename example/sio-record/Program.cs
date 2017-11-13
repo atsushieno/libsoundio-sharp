@@ -112,16 +112,17 @@ namespace LibSoundIOSharp.Example
 			using (var fs = File.OpenWrite (outfile)) {
 				var arr = new byte [capacity];
 				unsafe {
-					void* arrptr = (void*) Marshal.UnsafeAddrOfPinnedArrayElement (arr, 0);
-					for (; ; ) {
-						api.FlushEvents ();
-						Thread.Sleep (1000);
-						int fill_bytes = ring_buffer.FillCount;
-						var read_buf = ring_buffer.ReadPointer;
+					fixed (void* arrptr = arr) {
+						for (; ; ) {
+							api.FlushEvents ();
+							Thread.Sleep (1000);
+							int fill_bytes = ring_buffer.FillCount;
+							var read_buf = ring_buffer.ReadPointer;
 
-						Buffer.MemoryCopy ((void*) read_buf, arrptr, fill_bytes, fill_bytes);
-						fs.Write (arr, 0, fill_bytes);
-						ring_buffer.AdvanceReadPointer (fill_bytes);
+							Buffer.MemoryCopy ((void*)read_buf, arrptr, fill_bytes, fill_bytes);
+							fs.Write (arr, 0, fill_bytes);
+							ring_buffer.AdvanceReadPointer (fill_bytes);
+						}
 					}
 				}
 			}
