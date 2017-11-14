@@ -165,6 +165,9 @@ namespace LibSoundIOSharp.Example
 			return 0;
 		}
 
+		const int ring_buffer_duration_seconds = 30;
+		static byte [] arr;
+		static FileStream fs;
 		static void read_callback (SoundIOInStream instream, int frame_count_min, int frame_count_max)
 		{
 			var write_ptr = ring_buffer.WritePointer;
@@ -192,9 +195,9 @@ namespace LibSoundIOSharp.Example
 						Marshal.WriteByte (write_ptr + i, 0);
 					Console.Error.WriteLine ("Dropped {0} frames due to internal overflow", frame_count);
 				} else {
+					int chCount = instream.Layout.ChannelCount;
+					int copySize = instream.BytesPerSample;
 					for (int frame = 0; frame < frame_count; frame += 1) {
-						int chCount = instream.Layout.ChannelCount;
-						int copySize = instream.BytesPerSample;
 						unsafe {
 							for (int ch = 0; ch < chCount; ch += 1) {
 								var area = areas.GetArea (ch);
@@ -220,14 +223,14 @@ namespace LibSoundIOSharp.Example
 		static void write_callback (SoundIOOutStream outstream, int frame_count_min, int frame_count_max)
 		{
 			SoundIOChannelAreas areas = default (SoundIOChannelAreas);
-			int frames_left = frame_count_max;
+			int frames_left = 0;
+			int frame_count = 0;
 
 			var read_ptr = ring_buffer.ReadPointer;
 			int fill_bytes = ring_buffer.FillCount;
 			int fill_count = fill_bytes / outstream.BytesPerFrame;
 
 			if (frame_count_min > fill_count) {
-				int frame_count = 0;
 				// Ring buffer does not have enough data, fill with zeroes.
 				frames_left = frame_count_min;
 				for (; ; ) {
@@ -256,7 +259,7 @@ namespace LibSoundIOSharp.Example
 			frames_left = read_count;
 
 			while (frames_left > 0) {
-				int frame_count = frames_left;
+				frame_count = frames_left;
 
 				areas = outstream.BeginWrite (ref frame_count);
 
@@ -269,7 +272,7 @@ namespace LibSoundIOSharp.Example
 					unsafe {
 						for (int ch = 0; ch < chCount; ch += 1) {
 							var area = areas.GetArea (ch);
-							Buffer.MemoryCopy ((void*) area.Pointer, (void*) read_ptr, copySize, copySize);
+							Buffer.MemoryCopy ((void*)read_ptr, (void*) area.Pointer, copySize, copySize);
 							area.Pointer += area.Step;
 							read_ptr += outstream.BytesPerSample;
 						}
