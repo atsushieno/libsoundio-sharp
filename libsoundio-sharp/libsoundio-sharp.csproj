@@ -51,8 +51,12 @@
     <Compile Include="MarshalExtensions.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\external\libsoundio\libsoundio.so">
+    <None Include="libs\libsoundio.so">
       <Link>libsoundio.so</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="libs\libsoundio.dulib">
+      <Link>libsoundio.dylib</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

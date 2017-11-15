@@ -7,8 +7,12 @@
 
   <ItemGroup>
     <Compile Include="..\..\libsoundio-sharp\*.cs" />
-    <None Include="..\..\external\libsoundio\libsoundio.so">
+    <None Include="..\..\libsoundio-sharp\libs\libsoundio.so">
       <Link>libsoundio.so</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\libsoundio-sharp\libs\libsoundio.dylib">
+      <Link>libsoundio.dylib</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
