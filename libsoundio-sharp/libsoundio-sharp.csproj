@@ -55,7 +55,7 @@
       <Link>libsoundio.so</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Include="libs\libsoundio.dulib">
+    <None Include="libs\libsoundio.dylib">
       <Link>libsoundio.dylib</Link>
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
