@@ -24,7 +24,7 @@ $(MANAGED_LIB): $(GEN_SOURCES) $(SHARED_LIB)
 	msbuild
 
 $(GEN_SOURCES): $(PINVOKEGEN) $(C_HEADERS)
-	$(RUNTIME) $(PINVOKEGEN) --lib:soundio --ns:LibSoundIOSharp $(C_HEADERS) > $(GEN_SOURCES) || rm $(GEN_SOURCES)
+	$(RUNTIME) $(PINVOKEGEN) --lib:soundio --ns:SoundIOSharp $(C_HEADERS) > $(GEN_SOURCES) || rm $(GEN_SOURCES)
 
 $(PINVOKEGEN):
 	cd external/nclang && msbuild

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace LibSoundIOSharp
+namespace SoundIOSharp
 {
 	public class SoundIO : IDisposable
 	{
@@ -285,7 +285,7 @@ namespace LibSoundIOSharp
 
 		public static bool HaveBackend (SoundIOBackend backend)
 		{
-			return Natives.soundio_have_backend ((SoundIoBackend) backend) != 0;
+			return Natives.soundio_have_backend ((SoundIoBackend) backend);
 		}
 
 		public static int GetBytesPerSample (SoundIOFormat format)

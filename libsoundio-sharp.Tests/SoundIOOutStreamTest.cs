@@ -2,7 +2,7 @@
 using System.Threading;
 using NUnit.Framework;
 
-namespace LibSoundIOSharp.Tests
+namespace SoundIOSharp.Tests
 {
 	[TestFixture]
 	public class SoundIOOutStreamTest

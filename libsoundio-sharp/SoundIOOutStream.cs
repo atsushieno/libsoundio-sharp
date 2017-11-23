@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace LibSoundIOSharp
+namespace SoundIOSharp
 {
 	public class SoundIOOutStream : IDisposable
 	{
@@ -220,7 +220,7 @@ namespace LibSoundIOSharp
 
 		public void Pause (bool pause)
 		{
-			var ret = (SoundIoError) Natives.soundio_outstream_pause (handle, pause ? 1 : 0);
+			var ret = (SoundIoError) Natives.soundio_outstream_pause (handle, pause);
 			if (ret != SoundIoError.SoundIoErrorNone)
 				throw new SoundIOException (ret);
 		}

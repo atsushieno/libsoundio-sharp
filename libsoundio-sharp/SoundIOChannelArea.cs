@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Runtime.InteropServices;
 
-namespace LibSoundIOSharp
+namespace SoundIOSharp
 {
 	public struct SoundIOChannelArea
 	{

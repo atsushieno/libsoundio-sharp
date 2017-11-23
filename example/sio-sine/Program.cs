@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace LibSoundIOSharp.Example
+namespace SoundIOSharp.Example
 {
 	class Sine
 	{

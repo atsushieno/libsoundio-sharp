@@ -1,7 +1,7 @@
 ﻿using System;
 using NUnit.Framework;
 
-namespace LibSoundIOSharp.Tests
+namespace SoundIOSharp.Tests
 {
 	[TestFixture]
 	public class SoundIOInStreamTest

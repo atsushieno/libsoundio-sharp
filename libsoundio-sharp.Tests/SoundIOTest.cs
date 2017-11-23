@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace LibSoundIOSharp.Tests
+namespace SoundIOSharp.Tests
 {
 	[TestFixture]
 	public class SoundIOTest

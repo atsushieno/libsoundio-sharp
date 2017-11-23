@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 
-namespace LibSoundIOSharp.Example
+namespace SoundIOSharp.Example
 {
 	class MainClass
 	{

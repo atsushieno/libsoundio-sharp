@@ -1,5 +1,5 @@
 ﻿using System;
-namespace LibSoundIOSharp
+namespace SoundIOSharp
 {
 	public class SoundIORingBuffer : IDisposable
 	{

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 
-namespace LibSoundIOSharp
+namespace SoundIOSharp
 {
 	public class SoundIODevice
 	{
@@ -25,7 +25,7 @@ namespace LibSoundIOSharp
 		public override bool Equals (object other)
 		{
 			var d = other as SoundIODevice;
-			return d != null && (this.handle == d.handle || Natives.soundio_device_equal (this.handle, d.handle) != 0);
+			return d != null && (this.handle == d.handle || Natives.soundio_device_equal (this.handle, d.handle));
 		}
 
 		public override int GetHashCode ()
@@ -189,12 +189,12 @@ namespace LibSoundIOSharp
 
 		public bool SupportsFormat (SoundIOFormat format)
 		{
-			return Natives.soundio_device_supports_format (handle, (SoundIoFormat) format) != 0;
+			return Natives.soundio_device_supports_format (handle, (SoundIoFormat) format);
 		}
 
 		public bool SupportsSampleRate (int sampleRate)
 		{
-			return Natives.soundio_device_supports_sample_rate (handle, sampleRate) != 0;
+			return Natives.soundio_device_supports_sample_rate (handle, sampleRate);
 		}
 
 		public int GetNearestSampleRate (int sampleRate)

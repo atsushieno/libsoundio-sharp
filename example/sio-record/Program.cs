@@ -5,7 +5,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Threading;
 
-namespace LibSoundIOSharp.Example
+namespace SoundIOSharp.Example
 {
 	class Record
 	{

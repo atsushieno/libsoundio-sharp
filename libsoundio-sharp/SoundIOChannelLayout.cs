@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 
-namespace LibSoundIOSharp
+namespace SoundIOSharp
 {
 	public struct SoundIOChannelLayout
 	{
@@ -74,7 +74,7 @@ namespace LibSoundIOSharp
 			if (!(other is SoundIOChannelLayout))
 				return false;
 			var s = (SoundIOChannelLayout) other;
-			return handle == s.handle || Natives.soundio_channel_layout_equal (handle, s.handle) != 0;
+			return handle == s.handle || Natives.soundio_channel_layout_equal (handle, s.handle);
 		}
 
 		public override int GetHashCode ()
@@ -86,7 +86,7 @@ namespace LibSoundIOSharp
 		{
 			if (IsNull)
 				throw new InvalidOperationException ();
-			return Natives.soundio_channel_layout_detect_builtin (handle) != 0 ? Name : null;
+			return Natives.soundio_channel_layout_detect_builtin (handle) ? Name : null;
 		}
 
 		public int FindChannel (SoundIOChannelId channel)
