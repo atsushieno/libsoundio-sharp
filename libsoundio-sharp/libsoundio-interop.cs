@@ -169,101 +169,101 @@ enum SoundIoFormat // soundio.h (235, 6)
 [StructLayout (LayoutKind.Sequential)]
 struct SoundIoChannelLayout // soundio.h (306, 8)
 {
-	[CTypeDetails ("Pointer<char>")]public System.IntPtr name;
-	public int channel_count;
+	[CTypeDetails ("Pointer<char>")]public System.IntPtr @name;
+	public int @channel_count;
 	[MarshalAs (UnmanagedType.ByValArray, SizeConst=24)]
-	[CTypeDetails ("ConstArrayOf<SoundIoChannelId>")] public SoundIoChannelId[] channels;
+	[CTypeDetails ("ConstArrayOf<SoundIoChannelId>")] public SoundIoChannelId[] @channels;
 }
 
 [StructLayout (LayoutKind.Sequential)]
 struct SoundIoSampleRateRange // soundio.h (313, 8)
 {
-	public int min;
-	public int max;
+	public int @min;
+	public int @max;
 }
 
 [StructLayout (LayoutKind.Sequential)]
 struct SoundIoChannelArea // soundio.h (319, 8)
 {
-	[CTypeDetails ("Pointer<byte>")]public System.IntPtr ptr;
-	public int step;
+	[CTypeDetails ("Pointer<byte>")]public System.IntPtr @ptr;
+	public int @step;
 }
 
 [StructLayout (LayoutKind.Sequential)]
 struct SoundIo // soundio.h (328, 8)
 {
-	[CTypeDetails ("Pointer<void>")]public System.IntPtr userdata;
-	[CTypeDetails ("Pointer<void (SoundIo *)>")]public Delegates.delegate0 on_devices_change;
-	[CTypeDetails ("Pointer<void (SoundIo *, int)>")]public Delegates.delegate1 on_backend_disconnect;
-	[CTypeDetails ("Pointer<void (SoundIo *)>")]public Delegates.delegate0 on_events_signal;
-	public SoundIoBackend current_backend;
-	[CTypeDetails ("Pointer<char>")]public System.IntPtr app_name;
-	[CTypeDetails ("Pointer<void ()>")]public Delegates.delegate2 emit_rtprio_warning;
-	[CTypeDetails ("Pointer<void (const char *)>")]public Delegates.delegate3 jack_info_callback;
-	[CTypeDetails ("Pointer<void (const char *)>")]public Delegates.delegate3 jack_error_callback;
+	[CTypeDetails ("Pointer<void>")]public System.IntPtr @userdata;
+	[CTypeDetails ("Pointer<void (SoundIo *)>")]public Delegates.delegate0 @on_devices_change;
+	[CTypeDetails ("Pointer<void (SoundIo *, int)>")]public Delegates.delegate1 @on_backend_disconnect;
+	[CTypeDetails ("Pointer<void (SoundIo *)>")]public Delegates.delegate0 @on_events_signal;
+	public SoundIoBackend @current_backend;
+	[CTypeDetails ("Pointer<char>")]public System.IntPtr @app_name;
+	[CTypeDetails ("Pointer<void ()>")]public Delegates.delegate2 @emit_rtprio_warning;
+	[CTypeDetails ("Pointer<void (const char *)>")]public Delegates.delegate3 @jack_info_callback;
+	[CTypeDetails ("Pointer<void (const char *)>")]public Delegates.delegate3 @jack_error_callback;
 }
 
 [StructLayout (LayoutKind.Sequential)]
 struct SoundIoDevice // soundio.h (387, 8)
 {
-	[CTypeDetails ("Pointer<SoundIo>")]public System.IntPtr soundio;
-	[CTypeDetails ("Pointer<byte>")]public System.IntPtr id;
-	[CTypeDetails ("Pointer<byte>")]public System.IntPtr name;
-	public SoundIoDeviceAim aim;
-	[CTypeDetails ("Pointer<SoundIoChannelLayout>")]public System.IntPtr layouts;
-	public int layout_count;
-	public SoundIoChannelLayout current_layout;
-	[CTypeDetails ("Pointer<SoundIoFormat>")]public System.IntPtr formats;
-	public int format_count;
-	public SoundIoFormat current_format;
-	[CTypeDetails ("Pointer<SoundIoSampleRateRange>")]public System.IntPtr sample_rates;
-	public int sample_rate_count;
-	public int sample_rate_current;
-	public double software_latency_min;
-	public double software_latency_max;
-	public double software_latency_current;
-	public bool is_raw;
-	public int ref_count;
-	public int probe_error;
+	[CTypeDetails ("Pointer<SoundIo>")]public System.IntPtr @soundio;
+	[CTypeDetails ("Pointer<byte>")]public System.IntPtr @id;
+	[CTypeDetails ("Pointer<byte>")]public System.IntPtr @name;
+	public SoundIoDeviceAim @aim;
+	[CTypeDetails ("Pointer<SoundIoChannelLayout>")]public System.IntPtr @layouts;
+	public int @layout_count;
+	public SoundIoChannelLayout @current_layout;
+	[CTypeDetails ("Pointer<SoundIoFormat>")]public System.IntPtr @formats;
+	public int @format_count;
+	public SoundIoFormat @current_format;
+	[CTypeDetails ("Pointer<SoundIoSampleRateRange>")]public System.IntPtr @sample_rates;
+	public int @sample_rate_count;
+	public int @sample_rate_current;
+	public double @software_latency_min;
+	public double @software_latency_max;
+	public double @software_latency_current;
+	public bool @is_raw;
+	public int @ref_count;
+	public int @probe_error;
 }
 
 [StructLayout (LayoutKind.Sequential)]
 struct SoundIoOutStream // soundio.h (497, 8)
 {
-	[CTypeDetails ("Pointer<SoundIoDevice>")]public System.IntPtr device;
-	public SoundIoFormat format;
-	public int sample_rate;
-	public SoundIoChannelLayout layout;
-	public double software_latency;
-	public float volume;
-	[CTypeDetails ("Pointer<void>")]public System.IntPtr userdata;
-	[CTypeDetails ("Pointer<void (SoundIoOutStream *, int, int)>")]public Delegates.delegate4 write_callback;
-	[CTypeDetails ("Pointer<void (SoundIoOutStream *)>")]public Delegates.delegate5 underflow_callback;
-	[CTypeDetails ("Pointer<void (SoundIoOutStream *, int)>")]public Delegates.delegate6 error_callback;
-	[CTypeDetails ("Pointer<char>")]public System.IntPtr name;
-	public bool non_terminal_hint;
-	public int bytes_per_frame;
-	public int bytes_per_sample;
-	public int layout_error;
+	[CTypeDetails ("Pointer<SoundIoDevice>")]public System.IntPtr @device;
+	public SoundIoFormat @format;
+	public int @sample_rate;
+	public SoundIoChannelLayout @layout;
+	public double @software_latency;
+	public float @volume;
+	[CTypeDetails ("Pointer<void>")]public System.IntPtr @userdata;
+	[CTypeDetails ("Pointer<void (SoundIoOutStream *, int, int)>")]public Delegates.delegate4 @write_callback;
+	[CTypeDetails ("Pointer<void (SoundIoOutStream *)>")]public Delegates.delegate5 @underflow_callback;
+	[CTypeDetails ("Pointer<void (SoundIoOutStream *, int)>")]public Delegates.delegate6 @error_callback;
+	[CTypeDetails ("Pointer<char>")]public System.IntPtr @name;
+	public bool @non_terminal_hint;
+	public int @bytes_per_frame;
+	public int @bytes_per_sample;
+	public int @layout_error;
 }
 
 [StructLayout (LayoutKind.Sequential)]
 struct SoundIoInStream // soundio.h (600, 8)
 {
-	[CTypeDetails ("Pointer<SoundIoDevice>")]public System.IntPtr device;
-	public SoundIoFormat format;
-	public int sample_rate;
-	public SoundIoChannelLayout layout;
-	public double software_latency;
-	[CTypeDetails ("Pointer<void>")]public System.IntPtr userdata;
-	[CTypeDetails ("Pointer<void (SoundIoInStream *, int, int)>")]public Delegates.delegate7 read_callback;
-	[CTypeDetails ("Pointer<void (SoundIoInStream *)>")]public Delegates.delegate8 overflow_callback;
-	[CTypeDetails ("Pointer<void (SoundIoInStream *, int)>")]public Delegates.delegate9 error_callback;
-	[CTypeDetails ("Pointer<char>")]public System.IntPtr name;
-	public bool non_terminal_hint;
-	public int bytes_per_frame;
-	public int bytes_per_sample;
-	public int layout_error;
+	[CTypeDetails ("Pointer<SoundIoDevice>")]public System.IntPtr @device;
+	public SoundIoFormat @format;
+	public int @sample_rate;
+	public SoundIoChannelLayout @layout;
+	public double @software_latency;
+	[CTypeDetails ("Pointer<void>")]public System.IntPtr @userdata;
+	[CTypeDetails ("Pointer<void (SoundIoInStream *, int, int)>")]public Delegates.delegate7 @read_callback;
+	[CTypeDetails ("Pointer<void (SoundIoInStream *)>")]public Delegates.delegate8 @overflow_callback;
+	[CTypeDetails ("Pointer<void (SoundIoInStream *, int)>")]public Delegates.delegate9 @error_callback;
+	[CTypeDetails ("Pointer<char>")]public System.IntPtr @name;
+	public bool @non_terminal_hint;
+	public int @bytes_per_frame;
+	public int @bytes_per_sample;
+	public int @layout_error;
 }
 
 [StructLayout (LayoutKind.Sequential)]

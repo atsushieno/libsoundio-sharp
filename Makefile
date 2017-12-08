@@ -21,6 +21,7 @@ endif
 all: $(MANAGED_LIB)
 
 $(MANAGED_LIB): $(GEN_SOURCES) $(SHARED_LIB)
+	nuget restore
 	msbuild
 
 $(GEN_SOURCES): $(PINVOKEGEN) $(C_HEADERS)
