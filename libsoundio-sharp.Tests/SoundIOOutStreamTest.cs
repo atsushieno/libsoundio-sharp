@@ -21,7 +21,7 @@ namespace SoundIOSharp.Tests
 						try {
 							switch (p.Name) {
 							case "Layout":
-								var cl = (SoundIOChannelLayout) p.GetValue (stream);
+								var cl = stream.Layout;
 								foreach (var pcl in typeof (SoundIOChannelLayout).GetProperties ())
 									Console.Error.WriteLine (pcl + " : " + pcl.GetValue (cl));
 								break;
@@ -68,16 +68,23 @@ namespace SoundIOSharp.Tests
 				api.FlushEvents ();
 				var dev = api.GetOutputDevice (api.DefaultOutputDeviceIndex);
 				Assert.AreNotEqual (0, dev.GetNearestSampleRate (1), "nearest sample rate is 0...?");
+				var wait = new ManualResetEvent (false);
 				using (var stream = dev.CreateOutStream ()) {
 					stream.Open ();
 					stream.WriteCallback = (min, max) => {
 						int frameCount = max;
-						stream.BeginWrite (ref frameCount);
+						var results = stream.BeginWrite (ref frameCount);
+						for (int channel = 0; channel < stream.Layout.ChannelCount; channel += 1) {
+							var area = results.GetArea (channel);
+							// FIXME: do write samples
+							area.Pointer += area.Step;
+						}
+						stream.EndWrite ();
+						wait.Set ();
 					};
 					stream.Start ();
 					stream.Pause (true);
-					Thread.Sleep (50);
-					stream.EndWrite ();
+					wait.WaitOne ();
 				}
 			} finally {
 				api.Disconnect ();
