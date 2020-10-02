@@ -56,7 +56,7 @@ namespace SoundIOSharp.Example
 				PrintDevice (api.GetInputDevice (i));
 			Console.WriteLine ("Outputs");
 			for (int i = 0; i < api.OutputDeviceCount; i++)
-				PrintDevice (api.GetInputDevice (i));
+				PrintDevice (api.GetOutputDevice (i));
 		}
 
 		static void PrintDevice (SoundIODevice dev)
